@@ -1,0 +1,245 @@
+{
+	"name": "FHIR_Pipeline4Observation_Spark_OC",
+	"properties": {
+		"activities": [
+			{
+				"name": "NDJSON_Ingestion_Observation",
+				"type": "SynapseNotebook",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebook": {
+						"referenceName": "Observation_Ingestion_NDJSON2Parquet",
+						"type": "NotebookReference"
+					},
+					"parameters": {
+						"StorageName": {
+							"value": {
+								"value": "@pipeline().parameters.StorageName",
+								"type": "Expression"
+							},
+							"type": "string"
+						}
+					},
+					"snapshot": true,
+					"sparkPool": {
+						"referenceName": {
+							"value": "@pipeline().parameters.SparkPoolName",
+							"type": "Expression"
+						},
+						"type": "BigDataPoolReference"
+					},
+					"executorSize": null,
+					"driverSize": null
+				}
+			},
+			{
+				"name": "ObservationParquetFlatten_Large",
+				"type": "SynapseNotebook",
+				"dependsOn": [
+					{
+						"activity": "NDJSON_Ingestion_Observation",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebook": {
+						"referenceName": "ObservationParquetFlatten_Large",
+						"type": "NotebookReference"
+					},
+					"parameters": {
+						"StorageName": {
+							"value": {
+								"value": "@pipeline().parameters.StorageName",
+								"type": "Expression"
+							},
+							"type": "string"
+						}
+					},
+					"snapshot": true,
+					"sparkPool": {
+						"referenceName": {
+							"value": "@pipeline().parameters.SparkPoolName",
+							"type": "Expression"
+						},
+						"type": "BigDataPoolReference"
+					},
+					"executorSize": null,
+					"driverSize": null
+				}
+			},
+			{
+				"name": "Observation_Parquet_large2SQL",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Create Tables",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "ParquetSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"wildcardFolderPath": {
+								"value": "@concat('fhir/',pipeline().parameters.DatasetSize,'/Observation_main')",
+								"type": "Expression"
+							},
+							"wildcardFileName": "*.parquet",
+							"enablePartitionDiscovery": false
+						}
+					},
+					"sink": {
+						"type": "SqlDWSink",
+						"allowCopyCommand": true,
+						"tableOption": "autoCreate",
+						"disableMetricsCollection": false
+					},
+					"enableStaging": true,
+					"stagingSettings": {
+						"linkedServiceName": {
+							"referenceName": "StorageLS",
+							"type": "LinkedServiceReference",
+							"parameters": {
+								"StorageName": {
+									"value": "@pipeline().parameters.StorageName",
+									"type": "Expression"
+								}
+							}
+						},
+						"path": "staging"
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "ObservationMain_LargeParquet",
+						"type": "DatasetReference",
+						"parameters": {
+							"StorageName": {
+								"value": "@pipeline().parameters.StorageName",
+								"type": "Expression"
+							},
+							"DatasetSize": {
+								"value": "@pipeline().parameters.DatasetSize",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "Observation_SQLDS",
+						"type": "DatasetReference",
+						"parameters": {
+							"DatabaseName": {
+								"value": "@pipeline().parameters.DatabaseName",
+								"type": "Expression"
+							},
+							"ServerName": {
+								"value": "@pipeline().parameters.ServerName",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			},
+			{
+				"name": "Create Tables",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "ObservationParquetFlatten_Large",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "SynapseDedicatedPoolLS",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"DatabaseName": {
+							"value": "@pipeline().parameters.DatabaseName",
+							"type": "Expression"
+						},
+						"ServerName": {
+							"value": "@pipeline().parameters.ServerName",
+							"type": "Expression"
+						}
+					}
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "IF OBJECT_ID('fhir.ObservationMain') IS NOT NULL\r\nBEGIN\r\n    DROP TABLE [fhir].[ObservationMain]\r\nEND\r\n\r\nCREATE TABLE [fhir].[ObservationMain]\r\n( \r\n\t[Observation_id] [varchar](64)  NULL,\r\n\t[resourceType] [varchar](100)  NULL,\r\n\t[issued] VARCHAR(30)  NULL,\r\n\t[status] [varchar](10)  NULL,\r\n\t[patient_id_reference] [varchar](64)  NULL,\r\n\t[encounter_id_reference] [varchar](64)  NULL,\r\n\t[effectiveDateTime] VARCHAR(30)  NULL,\r\n\t[valueQuantity_code] [varchar](50)  NULL,\r\n\t[valueQuantity_system] [varchar](100)  NULL,\r\n\t[valueQuantity_unit] [varchar](50)  NULL,\r\n\t[valueQuantity_value] [float]  NULL,\r\n\t[valueString] [nvarchar](200)  NULL\r\n)\r\nWITH\r\n(\r\n\tDISTRIBUTION = ROUND_ROBIN,\r\n\tHEAP\r\n)"
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"StorageName": {
+				"type": "string",
+				"defaultValue": "medicaldl"
+			},
+			"DatabaseName": {
+				"type": "string",
+				"defaultValue": "healthcare"
+			},
+			"ServerName": {
+				"type": "string",
+				"defaultValue": "health"
+			},
+			"SparkPoolName": {
+				"type": "string",
+				"defaultValue": "healthcare"
+			},
+			"DatasetSize": {
+				"type": "string",
+				"defaultValue": "1tb"
+			}
+		},
+		"folder": {
+			"name": "Observation"
+		},
+		"annotations": []
+	}
+}

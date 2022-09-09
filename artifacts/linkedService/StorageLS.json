@@ -1,0 +1,20 @@
+{
+	"name": "StorageLS",
+	"properties": {
+		"parameters": {
+			"StorageName": {
+				"type": "string",
+				"defaultValue": "medicaldl"
+			}
+		},
+		"annotations": [],
+		"type": "AzureBlobFS",
+		"typeProperties": {
+			"url": "@{concat('https://',linkedService().StorageName,'.dfs.core.windows.net')}"
+		},
+		"connectVia": {
+			"referenceName": "AutoResolveIntegrationRuntime",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}

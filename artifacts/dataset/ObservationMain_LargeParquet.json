@@ -1,0 +1,39 @@
+{
+	"name": "ObservationMain_LargeParquet",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "StorageLS",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"StorageName": {
+					"value": "@dataset().StorageName",
+					"type": "Expression"
+				}
+			}
+		},
+		"parameters": {
+			"StorageName": {
+				"type": "string"
+			},
+			"DatasetSize": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "*",
+				"folderPath": {
+					"value": "@dataset().DatasetSize",
+					"type": "Expression"
+				},
+				"fileSystem": "curated"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	},
+	"type": "Microsoft.Synapse/workspaces/datasets"
+}

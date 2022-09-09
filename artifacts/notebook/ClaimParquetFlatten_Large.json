@@ -1,0 +1,511 @@
+{
+	"name": "ClaimParquetFlatten_Large",
+	"properties": {
+		"folder": {
+			"name": "Claims"
+		},
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "healthcare",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "112g",
+			"driverCores": 16,
+			"executorMemory": "112g",
+			"executorCores": 16,
+			"numExecutors": 4,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "4",
+				"spark.dynamicAllocation.maxExecutors": "4",
+				"spark.autotune.trackingId": "f6bbd8e2-1229-423c-bf5f-0432650ae015"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"enableDebugMode": false,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "Synapse PySpark"
+			},
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/7e416de3-c506-4776-8270-83fd73c6cc37/resourceGroups/syne2e/providers/Microsoft.Synapse/workspaces/health/bigDataPools/healthcare",
+				"name": "healthcare",
+				"type": "Spark",
+				"endpoint": "https://health.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/healthcare",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "3.1",
+				"nodeCount": 3,
+				"cores": 16,
+				"memory": 112,
+				"automaticScaleJobs": false
+			},
+			"sessionKeepAliveTimeout": 180
+		},
+		"cells": [
+			{
+				"cell_type": "code",
+				"metadata": {
+					"tags": [
+						"parameters"
+					]
+				},
+				"source": [
+					"StorageName = \"medicaldl\"\r\n",
+					"DatasetSize = \"1tb\""
+				],
+				"execution_count": 1
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"curated_location = \"abfss://curated@\" + StorageName + \".dfs.core.windows.net/fhir/\"+ DatasetSize +\"/\"\r\n",
+					"processed_location = \"abfss://processed@\" + StorageName + \".dfs.core.windows.net/fhir/\"+ DatasetSize +\"/\"\r\n",
+					"write_mode=\"overwrite\""
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"Claim_df=spark.read.parquet(processed_location+\"Claim/\")"
+				],
+				"execution_count": 2
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": false
+				},
+				"source": [
+					"display(Claim_df.limit(10))"
+				],
+				"execution_count": 3
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"Claim_df.printSchema()"
+				],
+				"execution_count": 4
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"from pyspark.sql.functions import explode\r\n",
+					"from pyspark.sql.functions import regexp_replace\r\n",
+					"\r\n",
+					"Claim_main_explode_df = Claim_df.select(\r\n",
+					"    \"id\",\"resourceType\",\"status\",\"billablePeriod.end\",\"billablePeriod.start\",\"created\",\"patient.display\",\"patient.reference\",\r\n",
+					"    \"prescription.reference\",\"provider.display\",\"provider.reference\",\"total.currency\",\"total.value\",\"use\")\r\n",
+					"\r\n",
+					"#use toDF() to rename the columns\r\n",
+					"Claim_main_df= Claim_main_explode_df.toDF(*( \r\n",
+					"    \"Claim_id\",\"resourceType\",\"status\",\"billablePeriod_end\",\"billablePeriod_start\",\"created\",\r\n",
+					"    \"patient_display\",\"patient_id_reference\",\r\n",
+					"    \"prescription_reference\",\"provider_display\",\"provider_org_id_reference\",\"total_currency\",\"total_value\",\"use\"))\r\n",
+					"\r\n",
+					"Claim_main_df = Claim_main_df.withColumn(\"patient_id_reference\",regexp_replace(\"patient_id_reference\",\"Patient/\",\"\")).withColumn(\r\n",
+					"    \"provider_org_id_reference\",regexp_replace(\"provider_org_id_reference\",\"Organization/\",\"\"))\r\n",
+					"\r\n",
+					"\r\n",
+					"# adding schema optimization\r\n",
+					"# Arshad"
+				],
+				"execution_count": 5
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"Claim_main_df.printSchema()"
+				],
+				"execution_count": 6
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": false
+				},
+				"source": [
+					"display(Claim_main_df.limit(10))"
+				],
+				"execution_count": 7
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"Claim_main_df.count()"
+				],
+				"execution_count": 8
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"Claim_main_df.write.mode(write_mode).parquet(curated_location+\"Claim_main/\")"
+				],
+				"execution_count": 16
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"from pyspark.sql.functions import explode\r\n",
+					"\r\n",
+					"Claim_insurance_explode_df = Claim_df.select(\"id\", explode(Claim_df.insurance))\r\n",
+					"\r\n",
+					"#use toDF() to rename the columns\r\n",
+					"Claim_insurance_df= Claim_insurance_explode_df.toDF(*( \"Claim_id\",\"insurance\"))\r\n",
+					"\r\n",
+					"Claim_insurance_df = Claim_insurance_df.select(\r\n",
+					"    \"Claim_id\",\"insurance.coverage.display\",\"insurance.focal\",\"insurance.sequence\"\r\n",
+					" ).toDF(*(   \r\n",
+					"    \"Claim_id\",\"insurance_coverage.display\",\"insurance_focal\",\"insurance_sequence\" ))\r\n",
+					"\r\n",
+					"#    base_df_explode = base_df.select(explode(base_df.entry))"
+				],
+				"execution_count": 9
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"Claim_insurance_df.printSchema()"
+				],
+				"execution_count": 10
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": false
+				},
+				"source": [
+					"display(Claim_insurance_df.limit(10))"
+				],
+				"execution_count": 11
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"Claim_insurance_df.count()"
+				],
+				"execution_count": 12
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"Claim_insurance_df.write.mode(write_mode).parquet(curated_location+\"Claim_insurance/\")"
+				],
+				"execution_count": 17
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"from pyspark.sql.functions import explode\r\n",
+					"from pyspark.sql.functions import regexp_replace\r\n",
+					"\r\n",
+					"Claim_diagnosis_explode_df = Claim_df.select(\r\n",
+					"    \"id\",  explode(Claim_df.diagnosis))\r\n",
+					"\r\n",
+					"#use toDF() to rename the columns\r\n",
+					"Claim_diagnosis_df= Claim_diagnosis_explode_df.toDF(*( \"id\", \"diagnosis\"))\r\n",
+					"\r\n",
+					"Claim_diagnosis_df = Claim_diagnosis_df.select(\r\n",
+					"    \"id\",\"diagnosis.diagnosisReference.reference\",\"diagnosis.sequence\"\r\n",
+					" ).toDF(*(  \r\n",
+					"    \"Claim_id\",\"diagnosis_reference\",\"diagnosis_sequence\"))\r\n",
+					"Claim_diagnosis_df=Claim_diagnosis_df.withColumn(\r\n",
+					"    \"diagnosis_reference\",regexp_replace(\"diagnosis_reference\",\"Condition/\",\"\"))    "
+				],
+				"execution_count": 3
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"Claim_diagnosis_df.printSchema()"
+				],
+				"execution_count": 20
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"Claim_diagnosis_df.write.mode(write_mode).parquet(curated_location+\"Claim_diagnosis/\")"
+				],
+				"execution_count": 4
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"from pyspark.sql.functions import explode\r\n",
+					"from pyspark.sql.functions import regexp_replace\r\n",
+					"\r\n",
+					"Claim_procedure_explode_df = Claim_df.select(\"id\",explode(Claim_df.procedure))\r\n",
+					"\r\n",
+					"#use toDF() to rename the columns\r\n",
+					"Claim_procedure_df= Claim_procedure_explode_df.toDF(*( \"id\",\"procedure\"))\r\n",
+					"\r\n",
+					"Claim_procedure_df = Claim_procedure_df.select(\r\n",
+					"    \"id\",\"procedure.procedureReference.reference\",\"procedure.sequence\"\r\n",
+					" ).toDF(*(\r\n",
+					"    \"Claim_id\",\"procedure_reference\",\"procedure_sequence\"))\r\n",
+					"Claim_procedure_df=Claim_procedure_df.withColumn(\"procedure_reference\",regexp_replace(\"procedure_reference\",\"Procedure/\",\"\"))"
+				],
+				"execution_count": 3
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": false
+				},
+				"source": [
+					"display(Claim_procedure_df.limit(10))"
+				],
+				"execution_count": 4
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"Claim_procedure_df.write.mode(write_mode).parquet(curated_location+\"Claim_procedure/\")"
+				],
+				"execution_count": 5
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"#Claim_procedure_df.write.format(\"delta\").save(curated_location+\"Claim_procedure_delta/\")\r\n",
+					"#Claim_diagnosis_df.write.format(\"delta\").save(curated_location+\"Claim_diagnosis_delta/\")\r\n",
+					"#Claim_insurance_df.write.format(\"delta\").save(curated_location+\"Claim_insurance_delta/\")"
+				],
+				"execution_count": 11
+			}
+		]
+	}
+}

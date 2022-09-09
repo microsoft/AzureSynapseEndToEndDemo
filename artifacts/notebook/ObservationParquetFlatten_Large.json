@@ -1,0 +1,387 @@
+{
+	"name": "ObservationParquetFlatten_Large",
+	"properties": {
+		"folder": {
+			"name": "Observation"
+		},
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "healthcare",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "112g",
+			"driverCores": 16,
+			"executorMemory": "112g",
+			"executorCores": 16,
+			"numExecutors": 4,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "4",
+				"spark.dynamicAllocation.maxExecutors": "4",
+				"spark.autotune.trackingId": "0ff2572c-9472-4bb0-980c-22f1e1f08db5"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"enableDebugMode": false,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "Synapse PySpark"
+			},
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/7e416de3-c506-4776-8270-83fd73c6cc37/resourceGroups/syne2e/providers/Microsoft.Synapse/workspaces/health/bigDataPools/healthcare",
+				"name": "healthcare",
+				"type": "Spark",
+				"endpoint": "https://health.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/healthcare",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "3.1",
+				"nodeCount": 3,
+				"cores": 16,
+				"memory": 112,
+				"automaticScaleJobs": false
+			},
+			"sessionKeepAliveTimeout": 30
+		},
+		"cells": [
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"tags": [
+						"parameters"
+					]
+				},
+				"source": [
+					"StorageName = \"medicaldl\"\r\n",
+					"DatasetSize = \"1tb\""
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"curated_location = \"abfss://curated@\"+ StorageName +\".dfs.core.windows.net/fhir/\"+DatasetSize+\"/\"\r\n",
+					"processed_location = \"abfss://processed@\"+StorageName+\".dfs.core.windows.net/fhir/\"+DatasetSize+\"/\"\r\n",
+					"write_mode=\"overwrite\""
+				],
+				"execution_count": 1
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"Observation_df=spark.read.parquet(processed_location+\"Observation/\")"
+				],
+				"execution_count": 2
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": true
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": false
+				},
+				"source": [
+					"#display(Observation_df.limit(10))"
+				],
+				"execution_count": 3
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"from pyspark.sql.functions import regexp_replace\r\n",
+					"\r\n",
+					"Observation_df=Observation_df.withColumn(\"subject\",regexp_replace(\"subject.reference\",\"Patient/\",\"\")).withColumn(\"encounter\",regexp_replace(\"encounter.reference\",\"Encounter/\",\"\"))\r\n",
+					"Observation_df=Observation_df.withColumnRenamed(\"id\",\"Observation_id\")\r\n",
+					"Observation_df=Observation_df.withColumnRenamed(\"subject\",\"patient_id_reference\")\r\n",
+					"Observation_df=Observation_df.withColumnRenamed(\"encounter\",\"encounter_id_reference\")"
+				],
+				"execution_count": 3
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": true
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"Observation_df.printSchema()"
+				],
+				"execution_count": 6
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"from pyspark.sql.functions import explode\r\n",
+					"\r\n",
+					"Observation_main_df = Observation_df.select(\r\n",
+					"    \"Observation_id\",\"resourceType\",\"issued\",\"status\", \"patient_id_reference\",\"encounter_id_reference\",\"effectiveDateTime\",\r\n",
+					"    \"valueQuantity.code\",\"valueQuantity.system\",\"valueQuantity.unit\",\"valueQuantity.value\",\"valueString\").toDF(*(\r\n",
+					"    \"Observation_id\",\"resourceType\",\"issued\",\"status\",\"patient_id_reference\",\"encounter_id_reference\",\"effectiveDateTime\",\r\n",
+					"    \"valueQuantity_code\",\"valueQuantity_system\",\r\n",
+					"    \"valueQuantity_unit\",\"valueQuantity_value\",\"valueString\"))"
+				],
+				"execution_count": 8
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"Observation_main_df.write.mode(write_mode).parquet(curated_location+\"Observation_main/\")\r\n",
+					"#Observation_main_df.write.format(\"delta\").saveAsTable(\"fhirlakedb.Observation_main\")\r\n",
+					"#Patient_identifier_df.write.format(\"delta\").save(curated_location+\"Condition_clinicalStatus_delta/\")"
+				],
+				"execution_count": 9
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"from pyspark.sql.functions import explode\r\n",
+					"\r\n",
+					"Observation_category_explode_df = Observation_df.select(\r\n",
+					"    \"Observation_id\",\r\n",
+					"    explode(Observation_df.category)).toDF(*(\"Observation_id\",\"category\"))\r\n",
+					"\r\n",
+					"Observation_category_explode2_df = Observation_category_explode_df.select(\r\n",
+					"    \"Observation_id\",\r\n",
+					"    explode(Observation_category_explode_df.category.coding)).toDF(*(\"Observation_id\",\"category\"))    \r\n",
+					"\r\n",
+					"Observation_category_df = Observation_category_explode2_df.select(\"Observation_id\",\"category.*\").toDF(*(\"Observation_id\",\"category_code\",\"category_display\",\"category_system\"))"
+				],
+				"execution_count": 10
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"Observation_category_df.write.mode(write_mode).parquet(curated_location+\"Observation_category/\")"
+				],
+				"execution_count": 13
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"from pyspark.sql.functions import explode\r\n",
+					"\r\n",
+					"Observation_code_explode_df = Observation_df.select(\r\n",
+					"    \"Observation_id\",\"code.text\",explode(Observation_df.code.coding)).toDF(*(\"Observation_id\",\"text\",\"coding\"))\r\n",
+					"Observation_code_df = Observation_code_explode_df.select(\"Observation_id\",\"text\",\"coding.*\").toDF(*(\"Observation_id\",\"code_text\",\"coding_code\",\"coding_display\",\"coding_system\"))  "
+				],
+				"execution_count": 15
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"Observation_code_df.write.mode(write_mode).parquet(curated_location+\"Observation_code/\")"
+				],
+				"execution_count": 16
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"from pyspark.sql.functions import explode\r\n",
+					"from pyspark.sql.functions import explode_outer\r\n",
+					"\r\n",
+					"Observation_component_explode_df = Observation_df.select(\r\n",
+					"    \"Observation_id\",explode(Observation_df.component))\r\n",
+					"\r\n",
+					"Observation_component_explode2_df = Observation_component_explode_df.select(\"Observation_id\",explode_outer(Observation_component_explode_df.col.code.coding),\"col.code.text\",\r\n",
+					"    \"col.valueQuantity.code\",\"col.valueQuantity.system\",\"col.valueQuantity.unit\",\"col.valueQuantity.value\").toDF(*(\"Observation_id\",\"component_code\",\"component_text\",\r\n",
+					"    \"component_valueQuantity_code\",\"component_valueQuantity_system\",\"component_valueQuantity_unit\",\"component_valueQuantity_value\"))   \r\n",
+					"\r\n",
+					"Observation_component_df = Observation_component_explode2_df.select(\"Observation_id\",\"component_code.*\",\"component_text\",\r\n",
+					"    \"component_valueQuantity_code\",\"component_valueQuantity_system\",\"component_valueQuantity_unit\",\"component_valueQuantity_value\").toDF(*(\"Observation_id\",\"component_code\",\r\n",
+					"    \"component_display\",\"component_system\",\"component_text\",\r\n",
+					"    \"component_valueQuantity_code\",\"component_valueQuantity_system\",\"component_valueQuantity_unit\",\"component_valueQuantity_value\"))"
+				],
+				"execution_count": 4
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"Observation_component_df.write.mode(write_mode).parquet(curated_location+\"Observation_component/\")"
+				],
+				"execution_count": 7
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"from pyspark.sql.functions import explode\r\n",
+					"\r\n",
+					"Observation_valueCodeableConcept_explode_df = Observation_df.select(\r\n",
+					"    \"Observation_id\",explode(Observation_df.valueCodeableConcept.coding),\"valueCodeableConcept.text\").toDF(*(\"Observation_id\",\"coding\",\"valueCodeableConcept_text\"))\r\n",
+					"\r\n",
+					"Observation_valueCodeableConcept_df = Observation_valueCodeableConcept_explode_df.select(\"Observation_id\",\"coding.*\",\"valueCodeableConcept_text\").toDF(*(\"Observation_id\",\r\n",
+					"    \"valueCodeableConcept_code\", \"valueCodeableConcept_display\",\"valueCodeableConcept_system\",\"valueCodeableConcept_text\"))"
+				],
+				"execution_count": 22
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"Observation_valueCodeableConcept_df.write.mode(write_mode).parquet(curated_location+\"Observation_valueCodeableConcept/\")"
+				],
+				"execution_count": 26
+			}
+		]
+	}
+}

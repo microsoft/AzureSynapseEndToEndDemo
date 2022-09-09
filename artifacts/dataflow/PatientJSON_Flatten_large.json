@@ -1,0 +1,150 @@
+{
+	"name": "PatientJSON_Flatten_large",
+	"properties": {
+		"folder": {
+			"name": "Patient"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "PatientRawParquetLarge",
+						"type": "DatasetReference"
+					},
+					"name": "PatientNDJSON"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "PatientIdentifierParquetLarge",
+						"type": "DatasetReference"
+					},
+					"name": "sinkPatientIdentifier"
+				},
+				{
+					"dataset": {
+						"referenceName": "PatientExtensionParquetLarge",
+						"type": "DatasetReference"
+					},
+					"name": "sinkPatientExtension"
+				},
+				{
+					"dataset": {
+						"referenceName": "PatientAddressParquetLarge",
+						"type": "DatasetReference"
+					},
+					"name": "sinkPatientAddress"
+				}
+			],
+			"transformations": [
+				{
+					"name": "PatientIdentifierFlatten"
+				},
+				{
+					"name": "PatientExtensionFlatten"
+				},
+				{
+					"name": "PatientAddressFlatten"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          address as (city as string, country as string, extension as (extension as (url as string, valueDecimal as double)[], url as string)[], line as string[], postalCode as string, state as string)[],",
+				"          birthDate as string,",
+				"          communication as (language as (coding as (code as string, display as string, system as string)[], text as string))[],",
+				"          deceasedDateTime as string,",
+				"          extension as (url as string, valueAddress as (city as string, country as string, state as string), valueDecimal as double, valueString as string)[],",
+				"          gender as string,",
+				"          id as string,",
+				"          identifier as (system as string, type as (coding as (code as string, display as string, system as string)[], text as string), value as string)[],",
+				"          maritalStatus as (coding as (code as string, display as string, system as string)[], text as string),",
+				"          multipleBirthBoolean as boolean,",
+				"          multipleBirthInteger as long,",
+				"          name as (family as string, given as string[], prefix as string[], suffix as string[], use as string)[],",
+				"          resourceType as string,",
+				"          telecom as (system as string, use as string, value as string)[],",
+				"          text as (div as string, status as string)",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'parquet') ~> PatientNDJSON",
+				"PatientNDJSON foldDown(unroll(identifier.type.coding),",
+				"     mapColumn(",
+				"          patient_id = id,",
+				"          birthDate,",
+				"          deceasedDateTime,",
+				"          gender,",
+				"          text = maritalStatus.text,",
+				"          multipleBirthBoolean,",
+				"          multipleBirthInteger,",
+				"          resourceType,",
+				"          div = text.div,",
+				"          status = text.status,",
+				"          {identifier.system} = identifier.system,",
+				"          {identifier.type.coding.code} = identifier.type.coding.code,",
+				"          {identifier.type.coding.display} = identifier.type.coding.display,",
+				"          {identifier.type.coding.system} = identifier.type.coding.system,",
+				"          {identifier.type.text} = identifier.type.text,",
+				"          {identifier.value} = identifier.value",
+				"     ),",
+				"     skipDuplicateMapInputs: false,",
+				"     skipDuplicateMapOutputs: false) ~> PatientIdentifierFlatten",
+				"PatientNDJSON foldDown(unroll(extension),",
+				"     mapColumn(",
+				"          patient_id = id,",
+				"          url = extension.url,",
+				"          {extension.valueAddress.city} = extension.valueAddress.city,",
+				"          {extension.valueAddress.country} = extension.valueAddress.country,",
+				"          {extension.valueAddress.state} = extension.valueAddress.state,",
+				"          {extension.valueDecimal} = extension.valueDecimal,",
+				"          {extension.valueString} = extension.valueString",
+				"     ),",
+				"     skipDuplicateMapInputs: false,",
+				"     skipDuplicateMapOutputs: false) ~> PatientExtensionFlatten",
+				"PatientNDJSON foldDown(unroll(address.extension.extension),",
+				"     mapColumn(",
+				"          id,",
+				"          {address.city} = address.city,",
+				"          {address.country} = address.country,",
+				"          {address.extension.extension.url} = address.extension.extension.url,",
+				"          {address.extension.extension.valueDecimal} = address.extension.extension.valueDecimal,",
+				"          {address.extension.url} = address.extension.url,",
+				"          {address.postalCode} = address.postalCode,",
+				"          {address.state} = address.state",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: false) ~> PatientAddressFlatten",
+				"PatientIdentifierFlatten sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'parquet',",
+				"     truncate: true,",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sinkPatientIdentifier",
+				"PatientExtensionFlatten sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'parquet',",
+				"     truncate: true,",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sinkPatientExtension",
+				"PatientAddressFlatten sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'parquet',",
+				"     truncate: true,",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sinkPatientAddress"
+			]
+		}
+	}
+}

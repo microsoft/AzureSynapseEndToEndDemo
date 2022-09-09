@@ -1,0 +1,37 @@
+{
+	"name": "PatientRawParquetLarge",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "StorageLS",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"StorageName": {
+					"value": "@dataset().StorageName",
+					"type": "Expression"
+				}
+			}
+		},
+		"parameters": {
+			"StorageName": {
+				"type": "string"
+			},
+			"DatasetSize": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": {
+					"value": "@concat('fhir/',dataset().DatasetSize,'/Patient')",
+					"type": "Expression"
+				},
+				"fileSystem": "processed"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	}
+}

@@ -1,0 +1,67 @@
+{
+	"name": "Copy_Data_Source_To_Raw_PL",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy Source Data To Raw Container",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "BinarySource",
+						"storeSettings": {
+							"type": "AzureBlobStorageReadSettings",
+							"recursive": true
+						},
+						"formatSettings": {
+							"type": "BinaryReadSettings"
+						}
+					},
+					"sink": {
+						"type": "BinarySink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings",
+							"copyBehavior": "PreserveHierarchy"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "Source_DataPrep_DS",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "Sink_DataPrep_DS",
+						"type": "DatasetReference",
+						"parameters": {
+							"StorageName": {
+								"value": "@pipeline().parameters.TargetStorageName",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			}
+		],
+		"parameters": {
+			"TargetStorageName": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "Data Prep"
+		},
+		"annotations": []
+	}
+}

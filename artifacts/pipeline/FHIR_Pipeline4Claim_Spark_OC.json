@@ -1,0 +1,499 @@
+{
+	"name": "FHIR_Pipeline4Claim_Spark_OC",
+	"properties": {
+		"activities": [
+			{
+				"name": "NDJSON_Ingestion_Claim",
+				"type": "SynapseNotebook",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebook": {
+						"referenceName": "Claim_Ingestion_NDJSON2Parquet",
+						"type": "NotebookReference"
+					},
+					"parameters": {
+						"StorageName": {
+							"value": {
+								"value": "@pipeline().parameters.StorageName",
+								"type": "Expression"
+							},
+							"type": "string"
+						},
+						"DatasetSize": {
+							"value": {
+								"value": "@pipeline().parameters.DatasetSzie",
+								"type": "Expression"
+							},
+							"type": "string"
+						}
+					},
+					"snapshot": true,
+					"sparkPool": {
+						"referenceName": {
+							"value": "@pipeline().parameters.SparkPoolName",
+							"type": "Expression"
+						},
+						"type": "BigDataPoolReference"
+					},
+					"executorSize": null,
+					"conf": {
+						"spark.dynamicAllocation.enabled": null,
+						"spark.dynamicAllocation.minExecutors": null,
+						"spark.dynamicAllocation.maxExecutors": null
+					},
+					"driverSize": null,
+					"numExecutors": null
+				}
+			},
+			{
+				"name": "ClaimParquetFlatten_Large",
+				"type": "SynapseNotebook",
+				"dependsOn": [
+					{
+						"activity": "NDJSON_Ingestion_Claim",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebook": {
+						"referenceName": "ClaimParquetFlatten_Large",
+						"type": "NotebookReference"
+					},
+					"parameters": {
+						"StorageName": {
+							"value": {
+								"value": "@pipeline().parameters.StorageName",
+								"type": "Expression"
+							},
+							"type": "string"
+						},
+						"DatasetSize": {
+							"value": {
+								"value": "@pipeline().parameters.DatasetSzie",
+								"type": "Expression"
+							},
+							"type": "string"
+						}
+					},
+					"snapshot": true,
+					"sparkPool": {
+						"referenceName": {
+							"value": "@pipeline().parameters.SparkPoolName",
+							"type": "Expression"
+						},
+						"type": "BigDataPoolReference"
+					},
+					"conf": {
+						"spark.dynamicAllocation.enabled": null,
+						"spark.dynamicAllocation.minExecutors": null,
+						"spark.dynamicAllocation.maxExecutors": null
+					},
+					"numExecutors": null
+				}
+			},
+			{
+				"name": "ClaimDiagnosis2SQL",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Create Tables",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "ParquetSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"wildcardFolderPath": {
+								"value": "@concat('fhir/',pipeline().parameters.DatasetSzie,'/Claim_diagnosis')",
+								"type": "Expression"
+							},
+							"wildcardFileName": "*.parquet",
+							"enablePartitionDiscovery": false
+						}
+					},
+					"sink": {
+						"type": "SqlDWSink",
+						"allowCopyCommand": true,
+						"tableOption": "autoCreate",
+						"disableMetricsCollection": false
+					},
+					"enableStaging": true,
+					"stagingSettings": {
+						"linkedServiceName": {
+							"referenceName": "StorageLS",
+							"type": "LinkedServiceReference",
+							"parameters": {
+								"StorageName": {
+									"value": "@pipeline().parameters.StorageName",
+									"type": "Expression"
+								}
+							}
+						},
+						"path": "staging"
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "ClaimDiagnosisParquetLarge",
+						"type": "DatasetReference",
+						"parameters": {
+							"StorageName": {
+								"value": "@pipeline().parameters.StorageName",
+								"type": "Expression"
+							},
+							"FolderPath": {
+								"value": "@concat('fhir/',pipeline().parameters.DatasetSzie,'/Claim_diagnosis')",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ClaimDiagnosisSQL",
+						"type": "DatasetReference",
+						"parameters": {
+							"DatabaseName": {
+								"value": "@pipeline().parameters.DatabaseName",
+								"type": "Expression"
+							},
+							"ServerName": {
+								"value": "@pipeline().parameters.ServerName",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			},
+			{
+				"name": "ClaimInsurance2SQL",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Create Tables",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "ParquetSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"wildcardFolderPath": {
+								"value": "@concat('fhir/',pipeline().parameters.DatasetSzie,'/Claim_insurance')",
+								"type": "Expression"
+							},
+							"wildcardFileName": "*.parquet",
+							"enablePartitionDiscovery": false
+						}
+					},
+					"sink": {
+						"type": "SqlDWSink",
+						"allowCopyCommand": true,
+						"tableOption": "autoCreate",
+						"disableMetricsCollection": false
+					},
+					"enableStaging": true,
+					"stagingSettings": {
+						"linkedServiceName": {
+							"referenceName": "StorageLS",
+							"type": "LinkedServiceReference",
+							"parameters": {
+								"StorageName": {
+									"value": "@pipeline().parameters.StorageName",
+									"type": "Expression"
+								}
+							}
+						},
+						"path": "staging"
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "ClaimInsuranceParquetLarge",
+						"type": "DatasetReference",
+						"parameters": {
+							"StorageName": {
+								"value": "@pipeline().parameters.StorageName",
+								"type": "Expression"
+							},
+							"FolderPath": {
+								"value": "@concat('fhir/',pipeline().parameters.DatasetSzie,'/Claim_insurance')",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ClaimInsurance",
+						"type": "DatasetReference",
+						"parameters": {
+							"DatabaseName": {
+								"value": "@pipeline().parameters.DatabaseName",
+								"type": "Expression"
+							},
+							"ServerName": {
+								"value": "@pipeline().parameters.ServerName",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			},
+			{
+				"name": "ClaimProcedure2SQL",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Create Tables",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "ParquetSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"wildcardFolderPath": {
+								"value": "@concat('fhir/',pipeline().parameters.DatasetSzie,'/Claim_procedure')",
+								"type": "Expression"
+							},
+							"wildcardFileName": "*.parquet",
+							"enablePartitionDiscovery": false
+						}
+					},
+					"sink": {
+						"type": "SqlDWSink",
+						"allowCopyCommand": true,
+						"tableOption": "autoCreate",
+						"disableMetricsCollection": false
+					},
+					"enableStaging": true,
+					"stagingSettings": {
+						"linkedServiceName": {
+							"referenceName": "StorageLS",
+							"type": "LinkedServiceReference",
+							"parameters": {
+								"StorageName": {
+									"value": "@pipeline().parameters.StorageName",
+									"type": "Expression"
+								}
+							}
+						},
+						"path": "staging"
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "ClaimProcedureParquetLarge",
+						"type": "DatasetReference",
+						"parameters": {
+							"StorageName": {
+								"value": "@pipeline().parameters.StorageName",
+								"type": "Expression"
+							},
+							"FolderPath": {
+								"value": "@concat('fhir/',pipeline().parameters.DatasetSzie,'/Claim_procedure')",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ClaimProcedureSQL",
+						"type": "DatasetReference",
+						"parameters": {
+							"DatabaseName": {
+								"value": "@pipeline().parameters.DatabaseName",
+								"type": "Expression"
+							},
+							"ServerName": {
+								"value": "@pipeline().parameters.ServerName",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			},
+			{
+				"name": "Create Tables",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "ClaimParquetFlatten_Large",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "SynapseDedicatedPoolLS",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"DatabaseName": {
+							"value": "@pipeline().parameters.DatabaseName",
+							"type": "Expression"
+						},
+						"ServerName": {
+							"value": "@pipeline().parameters.ServerName",
+							"type": "Expression"
+						}
+					}
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "IF OBJECT_ID('fhir.ClaimDiagnosis') IS NOT NULL\nBEGIN\n    DROP TABLE [fhir].[ClaimDiagnosis]\nEND\n\nCREATE TABLE [fhir].[ClaimDiagnosis]\n( \n\t[Claim_id] [nvarchar](64)  NULL,\n\t[diagnosis_reference] [nvarchar](64)  NULL,\n\t[diagnosis_sequence] [bigint]  NULL\n)\nWITH\n(\n\tDISTRIBUTION = HASH ( [Claim_id] ),\n\tCLUSTERED COLUMNSTORE INDEX\n)\n\nIF OBJECT_ID('fhir.ClaimInsurance') IS NOT NULL\nBEGIN\n    DROP TABLE [fhir].[ClaimInsurance]\nEND\n\nCREATE TABLE [fhir].[ClaimInsurance]\n( \n\t[Claim_id] [nvarchar](64)  NULL,\n\t[insurance_coverage.display] [nvarchar](64)  NULL,\n\t[insurance_focal] [bit]  NULL,\n\t[insurance_sequence] [bigint]  NULL\n)\nWITH\n(\n\tDISTRIBUTION = HASH ( [Claim_id] ),\n\tCLUSTERED COLUMNSTORE INDEX\n)\n\nIF OBJECT_ID('fhir.ClaimProcedure') IS NOT NULL\nBEGIN\n    DROP TABLE [fhir].[ClaimProcedure]\nEND\n\nCREATE TABLE [fhir].[ClaimProcedure]\n( \n\t[Claim_id] [nvarchar](64)  NULL,\n\t[procedure_reference] [nvarchar](64)  NULL,\n\t[procedure_sequence] [bigint]  NULL\n)\nWITH\n(\n\tDISTRIBUTION = HASH ( [Claim_id] ),\n\tCLUSTERED COLUMNSTORE INDEX\n)"
+						}
+					]
+				}
+			},
+			{
+				"name": "LakeDatabase And Table Creation",
+				"type": "SynapseNotebook",
+				"dependsOn": [
+					{
+						"activity": "ClaimParquetFlatten_Large",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebook": {
+						"referenceName": "Lake Database And Table Creation",
+						"type": "NotebookReference"
+					},
+					"parameters": {
+						"StorageName": {
+							"value": {
+								"value": "@pipeline().parameters.StorageName",
+								"type": "Expression"
+							},
+							"type": "string"
+						},
+						"DatasetSize": {
+							"value": {
+								"value": "@pipeline().parameters.DatasetSzie",
+								"type": "Expression"
+							},
+							"type": "string"
+						}
+					},
+					"snapshot": true,
+					"sparkPool": {
+						"referenceName": {
+							"value": "@pipeline().parameters.SparkPoolName",
+							"type": "Expression"
+						},
+						"type": "BigDataPoolReference"
+					},
+					"conf": {
+						"spark.dynamicAllocation.enabled": null,
+						"spark.dynamicAllocation.minExecutors": null,
+						"spark.dynamicAllocation.maxExecutors": null
+					},
+					"numExecutors": null
+				}
+			}
+		],
+		"parameters": {
+			"StorageName": {
+				"type": "string",
+				"defaultValue": "medicaldl"
+			},
+			"DatabaseName": {
+				"type": "string",
+				"defaultValue": "healthcare"
+			},
+			"ServerName": {
+				"type": "string",
+				"defaultValue": "health"
+			},
+			"SparkPoolName": {
+				"type": "string",
+				"defaultValue": "healthcare"
+			},
+			"DatasetSzie": {
+				"type": "string",
+				"defaultValue": "1tb"
+			}
+		},
+		"folder": {
+			"name": "Claims"
+		},
+		"annotations": []
+	}
+}

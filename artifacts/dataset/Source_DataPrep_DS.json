@@ -1,0 +1,17 @@
+{
+	"name": "Source_DataPrep_DS",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Source_Dataset_LS",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"container": "source"
+			}
+		}
+	}
+}
