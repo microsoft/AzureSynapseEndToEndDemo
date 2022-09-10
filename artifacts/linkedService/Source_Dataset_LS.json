@@ -4,8 +4,7 @@
 	"properties": {
 		"parameters": {
 			"StorageWithSaSUrl": {
-				"type": "string",
-				"defaultValue": "https://medicaldl.blob.core.windows.net/?sv=2021-06-08&ss=bfqt&srt=sco&sp=r&se=2028-09-10T13:28:42Z&st=2022-09-10T05:28:42Z&spr=https&sig=P0EPvFn%2BI70%2BRuxznXn2jKcogxg9u1moCShzDtSza98%3D"
+				"type": "string"
 			}
 		},
 		"annotations": [],
