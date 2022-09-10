@@ -150,7 +150,7 @@
     },
     {
       "type": "Microsoft.Synapse/workspaces",
-      "apiVersion": "2019-06-01-preview",
+      "apiVersion": "2021-06-01-preview",
       "name": "[variables('workspaceName')]",
       "location": "[variables('location')]",
       "identity": {
@@ -167,7 +167,7 @@
         },
         "sqlAdministratorLogin": "[parameters('sqlAdministratorLogin')]",
         "sqlAdministratorLoginPassword": "[parameters('sqlAdministratorLoginPassword')]",
-        "managedVirtualNetwork": "default",
+        "publicNetworkAccess": "Enabled",
         "workspaceRepositoryConfiguration": {
           "type": "WorkspaceGitHubConfiguration",
           "hostName": "https://github.com",
