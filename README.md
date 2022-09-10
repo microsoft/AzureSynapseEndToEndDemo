@@ -14,8 +14,8 @@ Please follow below steps to successfully deploy Synapse workspace and its artif
 
 * Fork microsoft/AzureSynapseEndToEndDemo project to your local github account.
 
-    ![Forking](/images/Forking.gif)
+    ![Forking](/Images/Forking.gif)
 
 * Once you fork AzureSynapseEndToEndDemo project to your github account, please click on ***Deploy To Azure*** button
 
-    [![Deploy To Azure](/images/deploytoazure.svg?sanitize=true)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fmicrosoft%2FAzureSynapseEndToEndDemo%2Fmain%2FARMTemplate%2Fazuredeploy.json)
+    [![Deploy To Azure](/Images/deploytoazure.svg?sanitize=true)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fmicrosoft%2FAzureSynapseEndToEndDemo%2Fmain%2FARMTemplate%2Fazuredeploy.json)
