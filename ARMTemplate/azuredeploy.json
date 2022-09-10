@@ -172,7 +172,7 @@
           "type": "WorkspaceGitHubConfiguration",
           "hostName": "https://github.com",
           "accountName": "[parameters('githubUsername')]",
-          "repositoryName": "synapsee2edemo",
+          "repositoryName": "AzureSynapseEndToEndDemo",
           "rootFolder": "/artifacts",
           "collaborationBranch": "main"
         }

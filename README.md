@@ -13,7 +13,7 @@ large sized Health Care sample data. You will learn how to ingest, process and s
 ### Deployment Steps
 Please follow below steps to successfully deploy Synapse workspace and its artifacts on your Azure Subscription
 
-* Fork microsoft/AzureSynapseEndToEndDemo project to your local github account.
+* Fork microsoft/AzureSynapseEndToEndDemo project to your local github account. Make sure to check "Copy the main branch only".
 
     ![Forking](/Images/Forking.gif)
 
