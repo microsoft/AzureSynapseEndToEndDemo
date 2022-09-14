@@ -1,0 +1,24 @@
+{
+	"name": "SynapseDedicatedPoolLS",
+	"properties": {
+		"parameters": {
+			"DatabaseName": {
+				"type": "string",
+				"defaultValue": "healthcare"
+			},
+			"ServerName": {
+				"type": "string",
+				"defaultValue": "health"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlDW",
+		"typeProperties": {
+			"connectionString": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=\"@{concat(linkedService().ServerName,'.sql.azuresynapse.net')}\";Initial Catalog=@{linkedService().DatabaseName}"
+		},
+		"connectVia": {
+			"referenceName": "AutoResolveIntegrationRuntime",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}

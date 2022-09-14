@@ -1,0 +1,35 @@
+{
+	"name": "PatientIdentifierSQLLarge",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SynapseDedicatedPoolLS",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"DatabaseName": {
+					"value": "@dataset().DatabaseName",
+					"type": "Expression"
+				},
+				"ServerName": {
+					"value": "@dataset().ServerName",
+					"type": "Expression"
+				}
+			}
+		},
+		"parameters": {
+			"DatabaseName": {
+				"type": "string"
+			},
+			"ServerName": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlDWTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "fhir",
+			"table": "PatientIdentifier"
+		}
+	},
+	"type": "Microsoft.Synapse/workspaces/datasets"
+}

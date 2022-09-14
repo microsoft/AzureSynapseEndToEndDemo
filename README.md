@@ -1,33 +1,38 @@
-# Project
+# Azure Synapse End-End Demo
 
-> This repo has been populated by an initial template to help get you started. Please
-> make sure to update the content to build a great experience for community-building.
+This repository provides one-click infrastructure and artifact deployment for Azure Synapse Analytics to get you started with Big Data Analytics on a 
+large sized Health Care sample data. You will learn how to ingest, process and serve large volumes of data using various components of Synapse.
 
-As the maintainer of this project, please make a few updates:
+## Deploy Azure Synapse Demo in your azure environment
 
-- Improving this README.MD file to provide a great experience
-- Updating SUPPORT.MD with content about this project's support experience
-- Understanding the security reporting process in SECURITY.MD
-- Remove this section from the README
+### Pre-requisites to deploy Synapse end-end demo
 
-## Contributing
+* You must have a github account
+* You must have an active azure subscription
 
-This project welcomes contributions and suggestions.  Most contributions require you to agree to a
-Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us
-the rights to use your contribution. For details, visit https://cla.opensource.microsoft.com.
+### Deployment Steps
+Please follow below steps to successfully deploy Synapse workspace and its artifacts on your Azure Subscription
 
-When you submit a pull request, a CLA bot will automatically determine whether you need to provide
-a CLA and decorate the PR appropriately (e.g., status check, comment). Simply follow the instructions
-provided by the bot. You will only need to do this once across all repos using our CLA.
+* Fork microsoft/AzureSynapseEndToEndDemo project to your local github account. Make sure to check "Copy the main branch only".
 
-This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
-For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or
-contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
+    ![Forking](/Images/Forking.gif)
 
-## Trademarks
+* Once you fork AzureSynapseEndToEndDemo project to your github account, please click on **Deploy to Azure** button to start the deployment
 
-This project may contain trademarks or logos for projects, products, or services. Authorized use of Microsoft 
-trademarks or logos is subject to and must follow 
-[Microsoft's Trademark & Brand Guidelines](https://www.microsoft.com/en-us/legal/intellectualproperty/trademarks/usage/general).
-Use of Microsoft trademarks or logos in modified versions of this project must not cause confusion or imply Microsoft sponsorship.
-Any use of third-party trademarks or logos are subject to those third-party's policies.
+    [![Deploy To Azure](/Images/deploytoazure.svg?sanitize=true)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fmicrosoft%2FAzureSynapseEndToEndDemo%2Fmain%2FARMTemplate%2Fazuredeploy.json)
+
+* **Deploy to Azure** button takes you to https://ms.portal.azure.com/#create/Microsoft.Template webpage. Please provide subscription, resource group, region, storage account name, storage container name, workspace name, dedicated sql pool name, spark pool name, spark pool node size, sql administration username/password, sku (dedicated sql pool Data Warehouse Units) and github username parameter values.
+
+    >*Note: The github username is should be target github account  where you forked the project to. Example: If https://github.com/microsoft/AzureSynapseEndToEndDemo is the github project url, then microsoft is github account name.*
+
+* Click on **Review + Create** button to trigger deployment validation. If deployment validation is successful, the single click deployment will deploy a Synapse Workspace, dedicated sql pool, spark pool infrastructure. This deployment also enable git configuration all the required artifacts for the end-end demo committed to user github project. This completes the Azure Synapse end-end code deployment step
+
+    >*Note: If deployment is incomplete, please look at the resource group activity log and find the latest deployment errors for more information*
+
+### Demo Setup
+
+TBD
+
+### Demo Execution
+
+TBD

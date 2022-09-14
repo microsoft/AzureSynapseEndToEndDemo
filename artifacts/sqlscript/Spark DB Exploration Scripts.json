@@ -1,0 +1,20 @@
+{
+	"name": "Spark DB Exploration Scripts",
+	"properties": {
+		"folder": {
+			"name": "Exploration"
+		},
+		"content": {
+			"query": "SELECT TOP (100) [Claim_id]\n,[insurance_coverage.display]\n,[insurance_focal]\n,[insurance_sequence]\n FROM [fhirdbexploration].[dbo].[claiminsurance]\n\n SELECT TOP (100) [Claim_id]\n,[procedure_reference]\n,[procedure_sequence]\n FROM [fhirdbexploration].[dbo].[claimprocedure]\n\n SELECT TOP (100) [Claim_id]\n,[diagnosis_reference]\n,[diagnosis_sequence]\n FROM [fhirdbexploration].[dbo].[patientdianosis]",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "FHIRRef",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

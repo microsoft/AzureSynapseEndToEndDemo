@@ -1,0 +1,189 @@
+{
+	"name": "Lake Database And Table Creation",
+	"properties": {
+		"folder": {
+			"name": "Exploration"
+		},
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "healthcare",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "112g",
+			"driverCores": 16,
+			"executorMemory": "112g",
+			"executorCores": 16,
+			"numExecutors": 2,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "cdcb3e0e-61cf-4e33-8866-6df1ba4e31ee"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"enableDebugMode": false,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "Synapse PySpark"
+			},
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/7e416de3-c506-4776-8270-83fd73c6cc37/resourceGroups/syne2e/providers/Microsoft.Synapse/workspaces/health/bigDataPools/healthcare",
+				"name": "healthcare",
+				"type": "Spark",
+				"endpoint": "https://health.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/healthcare",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "3.1",
+				"nodeCount": 3,
+				"cores": 16,
+				"memory": 112,
+				"automaticScaleJobs": false
+			},
+			"sessionKeepAliveTimeout": 30
+		},
+		"cells": [
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"tags": [
+						"parameters"
+					]
+				},
+				"source": [
+					"StorageName = \"medicaldl\"\r\n",
+					"DatasetSize = \"1tb\""
+				],
+				"execution_count": 36
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"microsoft": {
+						"language": "sparksql"
+					},
+					"collapsed": false
+				},
+				"source": [
+					"%%sql\r\n",
+					"DROP DATABASE IF EXISTS fhirdbexploration CASCADE;\r\n",
+					"CREATE DATABASE fhirdbexploration;"
+				],
+				"execution_count": 20
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"microsoft": {
+						"language": "sparksql"
+					},
+					"collapsed": false
+				},
+				"source": [
+					"%%sql\r\n",
+					"USE fhirdbexploration"
+				],
+				"execution_count": 23
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"curated_location = \"abfss://curated@\" + StorageName + \".dfs.core.windows.net/fhir/\"+ DatasetSize +\"/\""
+				],
+				"execution_count": 33
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"claimDiagonisLocation = curated_location + \"Claim_diagnosis/\"\r\n",
+					"spark.conf.set('claimDiagonisLocation',claimDiagonisLocation)\r\n",
+					"\r\n",
+					"claimInsuranceLocation = curated_location + \"Claim_insurance/\"\r\n",
+					"spark.conf.set('claimInsuranceLocation',claimInsuranceLocation)\r\n",
+					"\r\n",
+					"claimProcedureLocation = curated_location + \"Claim_procedure/\"\r\n",
+					"spark.conf.set('claimProcedureLocation',claimProcedureLocation)"
+				],
+				"execution_count": 34
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"microsoft": {
+						"language": "sparksql"
+					},
+					"collapsed": false
+				},
+				"source": [
+					"%%sql\r\n",
+					"DROP TABLE IF EXISTS fhirdbexploration.claimdiagnosis;\r\n",
+					"CREATE TABLE fhirdbexploration.claimdiagnosis USING PARQUET LOCATION '${claimDiagonisLocation}';\r\n",
+					"\r\n",
+					"DROP TABLE IF EXISTS fhirdbexploration.claiminsurance;\r\n",
+					"CREATE TABLE fhirdbexploration.claiminsurance USING PARQUET LOCATION '${claimInsuranceLocation}';\r\n",
+					"\r\n",
+					"DROP TABLE IF EXISTS fhirdbexploration.claimprocedure;\r\n",
+					"CREATE TABLE fhirdbexploration.claimprocedure USING PARQUET LOCATION '${claimProcedureLocation}';"
+				],
+				"execution_count": 35
+			}
+		]
+	}
+}

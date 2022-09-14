@@ -1,0 +1,107 @@
+{
+	"name": "ClaimInsuranceParquetLarge",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "StorageLS",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"StorageName": {
+					"value": "@dataset().StorageName",
+					"type": "Expression"
+				}
+			}
+		},
+		"parameters": {
+			"StorageName": {
+				"type": "string"
+			},
+			"FolderPath": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "*",
+				"folderPath": {
+					"value": "@dataset().FolderPath",
+					"type": "Expression"
+				},
+				"fileSystem": "curated"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": [
+			{
+				"name": "id",
+				"type": "UTF8"
+			},
+			{
+				"name": "resourceType",
+				"type": "UTF8"
+			},
+			{
+				"name": "status",
+				"type": "UTF8"
+			},
+			{
+				"name": "billablePeriod_end",
+				"type": "UTF8"
+			},
+			{
+				"name": "billablePeriod_start",
+				"type": "UTF8"
+			},
+			{
+				"name": "created",
+				"type": "UTF8"
+			},
+			{
+				"name": "patient_display",
+				"type": "UTF8"
+			},
+			{
+				"name": "patient_reference",
+				"type": "UTF8"
+			},
+			{
+				"name": "prescription_reference",
+				"type": "UTF8"
+			},
+			{
+				"name": "provider_display",
+				"type": "UTF8"
+			},
+			{
+				"name": "provider_reference",
+				"type": "UTF8"
+			},
+			{
+				"name": "total_currency",
+				"type": "UTF8"
+			},
+			{
+				"name": "total_value",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "use",
+				"type": "UTF8"
+			},
+			{
+				"name": "display",
+				"type": "UTF8"
+			},
+			{
+				"name": "focal",
+				"type": "BOOLEAN"
+			},
+			{
+				"name": "sequence",
+				"type": "INT64"
+			}
+		]
+	}
+}

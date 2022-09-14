@@ -1,0 +1,21 @@
+{
+	"name": "JSON_exploration_w_Serverless_Demo_OC",
+	"properties": {
+		"description": "Json data (FHIR NDJSON) exploration with Serverless",
+		"folder": {
+			"name": "Exploration"
+		},
+		"content": {
+			"query": "SELECT   TOP 100 *\nFROM\n    OPENROWSET(\n        BULK 'https://medicaldl.dfs.core.windows.net/raw/fhir_ndjson/1tb/*/Observation.ndjson',\n        FORMAT = 'CSV',\n        FIELDQUOTE = '0x0b',\n        FIELDTERMINATOR ='0x0b'\n    )\n    WITH (\n        line varchar(max)\n    ) AS [result]\n\nSELECT   TOP 100 *\nFROM\n    OPENROWSET(\n        BULK 'Observation.ndjson',\n        DATA_SOURCE = 'JSONSource',\n        FORMAT = 'CSV',\n        FIELDQUOTE = '0x0b',\n        FIELDTERMINATOR ='0x0b'\n    )\n    WITH (\n        line varchar(max)\n    ) AS [result]\n\n/* Flatten the NDJSO with JSON_VALUE, JSON_QUERY on CROSS APPLY OPENJSON */\n/* refreence: https://diangermishuizen.com/query-json-data-in-sql-server-and-synapse-analytics/ */\n/* Query 1, with only JSON_VALUE, JSON_QUERY */\nSELECT top 100\n    JSON_VALUE(line, '$.resourceType') AS resourceType,\n    JSON_VALUE(line, '$.id') AS id,\n    JSON_VALUE(line, '$.status') AS status,\n    JSON_query(line, '$.category') AS category_string ,\n    JSON_query(line, '$.code') AS code_string\nFROM\n    OPENROWSET(\n        BULK 'Observation.ndjson',\n        DATA_SOURCE = 'JSONSource',\n        FORMAT = 'CSV',\n        -- FIELDQUOTE and FIELDTERMINATOR are set to 0x0b as we do not expect to find it in the file.\n        FIELDQUOTE = '0x0b',\n        FIELDTERMINATOR ='0x0b'\n    )\n    WITH (\n        line varchar(max)\n    ) AS [result]\n\n/* Query 2, add CROSS APPLY OPENJSON to read array */\nSELECT  top 100\n    JSON_VALUE(line, '$.resourceType') AS resourceType,\n    JSON_VALUE(line, '$.id') AS id,\n    JSON_VALUE(line, '$.status') AS status,\n    JSON_query(line, '$.valueQuantity') AS valueQuantity_string,\n    valueQuantity_NestedArray_value,\n    valueQuantity_NestedArray_unit ,\n    JSON_query(line, '$.category') AS category_string\nFROM\n    OPENROWSET(\n        BULK 'Observation.ndjson',\n        DATA_SOURCE = 'JSONSource',\n        FORMAT = 'CSV',\n        -- FIELDQUOTE and FIELDTERMINATOR are set to 0x0b as we do not expect to find it in the file.\n        FIELDQUOTE = '0x0b',\n        FIELDTERMINATOR ='0x0b'\n    )\n    WITH (\n        line varchar(max)\n    ) AS [result]\nCROSS APPLY OPENJSON \n    (JSON_QUERY([line], '$.valueQuantity')) /*Note, if you want only the top most record from this array, replace this line with \"(JSON_QUERY([jsonContent], '$.attribute_with_nested_array[0]'))\"*/\nWITH(\n    [valueQuantity_NestedArray_value] varchar(255) '$.value',\n    [valueQuantity_NestedArray_unit] varchar(255) '$.unit'\n) AS [valueQuantity_NestedArray]\n\n\n/* Query 3, multiple CROSS APPLY OPENJSON to read */\nSELECT  top 100\n    JSON_VALUE(line, '$.resourceType') AS resourceType,\n    JSON_VALUE(line, '$.id') AS id,\n    JSON_VALUE(line, '$.status') AS status,\n    JSON_query(line, '$.valueQuantity') AS valueQuantity_string,\n    valueQuantity_NestedArray_value,\n    valueQuantity_NestedArray_unit ,\n    JSON_query(line, '$.category') AS category_string,\n    encounter_reference\nFROM\n    OPENROWSET(\n        BULK 'Observation.ndjson',\n        DATA_SOURCE = 'JSONSource',\n        FORMAT = 'CSV',\n        -- FIELDQUOTE and FIELDTERMINATOR are set to 0x0b as we do not expect to find it in the file.\n        FIELDQUOTE = '0x0b',\n        FIELDTERMINATOR ='0x0b'\n    )\n    WITH (\n        line varchar(max)\n    ) AS [result]\nCROSS APPLY OPENJSON \n    (JSON_QUERY([line], '$.valueQuantity')) /*Note, if you want only the top most record from this array, replace this line with \"(JSON_QUERY([jsonContent], '$.attribute_with_nested_array[0]'))\"*/\nWITH(\n    [valueQuantity_NestedArray_value] varchar(255) '$.value',\n    [valueQuantity_NestedArray_unit] varchar(255) '$.unit'\n) AS [valueQuantity_NestedArray]\nCROSS APPLY OPENJSON \n    (JSON_QUERY([line], '$.encounter')) \nWITH(\n    [encounter_reference] varchar(255) '$.reference'\n) AS [encounter_reference_NestedArray]",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "FHIRRef",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

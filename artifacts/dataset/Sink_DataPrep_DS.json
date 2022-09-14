@@ -1,0 +1,29 @@
+{
+	"name": "Sink_DataPrep_DS",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "StorageLS",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"StorageName": {
+					"value": "@dataset().StorageName",
+					"type": "Expression"
+				}
+			}
+		},
+		"parameters": {
+			"StorageName": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": "fhir_ndjson",
+				"fileSystem": "raw"
+			}
+		}
+	}
+}
