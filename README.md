@@ -31,7 +31,12 @@ Please follow below steps to successfully deploy Synapse workspace and its artif
 
 ### Demo Setup
 
-TBD
+First you will need to fill in some parameters and complete a few configuration steps before you can use the demos.  We need to provide the linked service to your storage account with the storage account name you chose during deployment.
+![image](https://user-images.githubusercontent.com/59613090/192065803-c1c7ccd8-0ab5-487f-aeca-0bb957d9e24e.png)
+
+Once you click on the linked service name it will open a panel where we can make changes and provide the correct parameters for our storage account.
+![image](https://user-images.githubusercontent.com/59613090/192065892-d103a4b9-dffb-4198-8036-28ab4045382a.png)
+
 
 ### Demo Execution
 
