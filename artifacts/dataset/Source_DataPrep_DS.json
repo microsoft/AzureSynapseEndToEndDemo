@@ -6,7 +6,7 @@
 			"type": "LinkedServiceReference",
 			"parameters": {
 				"StorageWithSaSUrl": {
-					"value": "@concat('https://medicaldl.blob.core.windows.net/?sv=2021-06-08&ss=bfqt&srt=sco&sp=r&se=2028-09-10T13:28:42Z&st=2022-09-10T05:28:42Z&spr=https&sig=P0EPvFn%2BI70%2BRuxznXn2jKcogxg9u1moCShzDtSza98%3D')",
+					"value": "@concat('https://medicaldl.blob.core.windows.net/source?sp=rl&st=2022-09-26T19:45:24Z&se=2032-09-27T03:45:24Z&spr=https&sv=2021-06-08&sr=c&sig=7MfRCnqvmJ7E24OJnTi51pmYN9FVO28XYjpXR6LhVRo%3D')",
 					"type": "Expression"
 				}
 			}
