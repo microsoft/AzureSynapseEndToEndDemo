@@ -3,6 +3,15 @@
 This repository provides one-click infrastructure and artifact deployment for Azure Synapse Analytics to get you started with Big Data Analytics on a 
 large sized Health Care sample data. You will learn how to ingest, process, and serve large volumes of data using various components of Synapse.
 
+## Reference Architecture
+![image](https://user-images.githubusercontent.com/59613090/192642933-23285334-d36c-40e7-8fc1-2e3ed9006ba0.png)
+
+## CONTENTS
+* Exercise 00 - Setup
+* Exercise 01 - Claims
+* Exercise 02 - Observations
+* Exercise 03 - Patients
+
 ## Deploy Azure Synapse Demo in Your Azure Environment
 
 ### Pre-requisites to Deploy Synapse end-to-end Demo
@@ -49,8 +58,3 @@ Now that the parameter is complete you'll need to copy the demo data from our Mi
 Once you have the pipeline open, you can execute it by adding a trigger and choosing the Trigger Now option.
 
 ![image](https://user-images.githubusercontent.com/59613090/192582378-b75f16e3-8426-41a8-9a8d-b0d9e9aacef1.png)
-
-
-### Demo Execution
-
-TBD
