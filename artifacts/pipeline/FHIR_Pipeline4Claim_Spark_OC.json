@@ -472,19 +472,19 @@
 		"parameters": {
 			"StorageName": {
 				"type": "string",
-				"defaultValue": "medicaldl"
+				"defaultValue": "synapsee2elake"
 			},
 			"DatabaseName": {
 				"type": "string",
-				"defaultValue": "healthcare"
+				"defaultValue": "synapsee2edw"
 			},
 			"ServerName": {
 				"type": "string",
-				"defaultValue": "health"
+				"defaultValue": "synapsee2e"
 			},
 			"SparkPoolName": {
 				"type": "string",
-				"defaultValue": "healthcare"
+				"defaultValue": "synapsee2espark"
 			},
 			"DatasetSize": {
 				"type": "string",
