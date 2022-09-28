@@ -29,7 +29,7 @@
 						},
 						"DatasetSize": {
 							"value": {
-								"value": "@pipeline().parameters.DatasetSzie",
+								"value": "@pipeline().parameters.DatasetSize",
 								"type": "Expression"
 							},
 							"type": "string"
@@ -87,7 +87,7 @@
 						},
 						"DatasetSize": {
 							"value": {
-								"value": "@pipeline().parameters.DatasetSzie",
+								"value": "@pipeline().parameters.DatasetSize",
 								"type": "Expression"
 							},
 							"type": "string"
@@ -135,7 +135,7 @@
 							"type": "AzureBlobFSReadSettings",
 							"recursive": true,
 							"wildcardFolderPath": {
-								"value": "@concat('fhir/',pipeline().parameters.DatasetSzie,'/Claim_diagnosis')",
+								"value": "@concat('fhir/',pipeline().parameters.DatasetSize,'/Claim_diagnosis')",
 								"type": "Expression"
 							},
 							"wildcardFileName": "*.parquet",
@@ -173,7 +173,7 @@
 								"type": "Expression"
 							},
 							"FolderPath": {
-								"value": "@concat('fhir/',pipeline().parameters.DatasetSzie,'/Claim_diagnosis')",
+								"value": "@concat('fhir/',pipeline().parameters.DatasetSize,'/Claim_diagnosis')",
 								"type": "Expression"
 							}
 						}
@@ -222,7 +222,7 @@
 							"type": "AzureBlobFSReadSettings",
 							"recursive": true,
 							"wildcardFolderPath": {
-								"value": "@concat('fhir/',pipeline().parameters.DatasetSzie,'/Claim_insurance')",
+								"value": "@concat('fhir/',pipeline().parameters.DatasetSize,'/Claim_insurance')",
 								"type": "Expression"
 							},
 							"wildcardFileName": "*.parquet",
@@ -260,7 +260,7 @@
 								"type": "Expression"
 							},
 							"FolderPath": {
-								"value": "@concat('fhir/',pipeline().parameters.DatasetSzie,'/Claim_insurance')",
+								"value": "@concat('fhir/',pipeline().parameters.DatasetSize,'/Claim_insurance')",
 								"type": "Expression"
 							}
 						}
@@ -309,7 +309,7 @@
 							"type": "AzureBlobFSReadSettings",
 							"recursive": true,
 							"wildcardFolderPath": {
-								"value": "@concat('fhir/',pipeline().parameters.DatasetSzie,'/Claim_procedure')",
+								"value": "@concat('fhir/',pipeline().parameters.DatasetSize,'/Claim_procedure')",
 								"type": "Expression"
 							},
 							"wildcardFileName": "*.parquet",
@@ -347,7 +347,7 @@
 								"type": "Expression"
 							},
 							"FolderPath": {
-								"value": "@concat('fhir/',pipeline().parameters.DatasetSzie,'/Claim_procedure')",
+								"value": "@concat('fhir/',pipeline().parameters.DatasetSize,'/Claim_procedure')",
 								"type": "Expression"
 							}
 						}
@@ -446,7 +446,7 @@
 						},
 						"DatasetSize": {
 							"value": {
-								"value": "@pipeline().parameters.DatasetSzie",
+								"value": "@pipeline().parameters.DatasetSize",
 								"type": "Expression"
 							},
 							"type": "string"
@@ -486,7 +486,7 @@
 				"type": "string",
 				"defaultValue": "healthcare"
 			},
-			"DatasetSzie": {
+			"DatasetSize": {
 				"type": "string",
 				"defaultValue": "1tb"
 			}
