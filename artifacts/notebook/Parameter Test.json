@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "999f7ae5-b324-4f40-8024-0c43f2938dca"
+				"spark.autotune.trackingId": "267a7d0f-7207-4503-ac68-9d806442155c"
 			}
 		},
 		"metadata": {
@@ -59,7 +59,7 @@
 					"StorageName = 'StorageName'\r\n",
 					"DatasetSize = 'DatasetSize'"
 				],
-				"execution_count": 1
+				"execution_count": 3
 			},
 			{
 				"cell_type": "code",
@@ -75,10 +75,12 @@
 					}
 				},
 				"source": [
+					"StorageName\r\n",
+					"DatasetSize\r\n",
 					"print(StorageName)\r\n",
 					"print(DatasetSize)"
 				],
-				"execution_count": 2
+				"execution_count": 4
 			}
 		]
 	}
