@@ -115,56 +115,6 @@
 									"type": "Expression"
 								}
 							}
-						},
-						"linkedServiceParameters": {
-							"PatientNDJSON": {
-								"schemaLinkedService": {
-									"StorageName": {
-										"value": "@pipeline().parameters.StorageName",
-										"type": "Expression"
-									},
-									"DatasetSize": {
-										"value": "@pipeline().parameters.DatasetSize",
-										"type": "Expression"
-									}
-								}
-							},
-							"sinkPatientIdentifier": {
-								"schemaLinkedService": {
-									"StorageName": {
-										"value": "@pipeline().parameters.StorageName",
-										"type": "Expression"
-									},
-									"DatasetSize": {
-										"value": "@pipeline().parameters.DatasetSize",
-										"type": "Expression"
-									}
-								}
-							},
-							"sinkPatientExtension": {
-								"schemaLinkedService": {
-									"StorageName": {
-										"value": "@pipeline().parameters.StorageName",
-										"type": "Expression"
-									},
-									"DatasetSize": {
-										"value": "@pipeline().parameters.DatasetSize",
-										"type": "Expression"
-									}
-								}
-							},
-							"sinkPatientAddress": {
-								"schemaLinkedService": {
-									"StorageName": {
-										"value": "@pipeline().parameters.StorageName",
-										"type": "Expression"
-									},
-									"DatasetSize": {
-										"value": "@pipeline().parameters.DatasetSize",
-										"type": "Expression"
-									}
-								}
-							}
 						}
 					},
 					"compute": {
@@ -645,19 +595,19 @@
 		"parameters": {
 			"StorageName": {
 				"type": "string",
-				"defaultValue": "medicaldl"
+				"defaultValue": "synapsee2elake"
 			},
 			"DatabaseName": {
 				"type": "string",
-				"defaultValue": "healthcare"
+				"defaultValue": "synapsee2edw"
 			},
 			"ServerName": {
 				"type": "string",
-				"defaultValue": "health"
+				"defaultValue": "synapsee2e"
 			},
 			"SparkPoolName": {
 				"type": "string",
-				"defaultValue": "healthcare"
+				"defaultValue": "synapsee2espark"
 			},
 			"DatasetSize": {
 				"type": "string",
