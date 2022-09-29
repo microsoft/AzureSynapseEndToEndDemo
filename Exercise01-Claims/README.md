@@ -1,5 +1,5 @@
 # Objective
-* This pipeline takes the JSON data that is in FHIR standard format from our "raw" ADLS container and converts it to parquet.  Since Parquet is a columnar compressed file format this makes it much faster to import and work with the data.  We store the parquet output in our "processed" container in ADLS.
+* This pipeline takes the JSON data that is in FHIR standard format from our "raw" ADLS container and converts it to parquet.  Since Parquet is a columnar compressed file format this makes it much faster to import and work with the data.  We store the parquet output in our "processed" container in ADLS under a folder called claim.
 ![image](https://user-images.githubusercontent.com/59613090/193112535-e9c68b13-95e0-4463-a572-4cdc1b8d694d.png)
 
 
