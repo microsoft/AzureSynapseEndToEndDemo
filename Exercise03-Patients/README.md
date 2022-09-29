@@ -1,17 +1,17 @@
 # Objective
-* This pipeline takes the JSON data that is in FHIR standard format from our "raw" ADLS container and converts it to parquet.  Since Parquet is a columnar compressed file format this makes it much faster to import and work with the data.  We store the parquet output in our "processed" container in ADLS under a folder called "Observation".
-![image](https://user-images.githubusercontent.com/59613090/193125969-460256eb-b025-4e56-8e16-ad10677b54f2.png)
+* This pipeline takes the JSON data that is in FHIR standard format from our "raw" ADLS container and converts it to parquet.  Since Parquet is a columnar compressed file format this makes it much faster to import and work with the data.  We store the parquet output in our "processed" container in ADLS under a folder called "Patient".
+![image](https://user-images.githubusercontent.com/59613090/193136231-4a965468-3d2e-4f24-80a3-c76d0bd8a387.png)
 
 
-* We plan to eventually load this data into Dedicated SQL Pool in a table called [fhir].[ObservationMain].  We need to extract the data needed for the table, clean it, and write it back to ADLS.  The second activity in our pipeline handles all of this in a single Synapse Spark Notebook.
-![image](https://user-images.githubusercontent.com/59613090/193125858-14673041-4408-4afb-a0f2-3017de0c4550.png)
+* We plan to eventually load this data into Dedicated SQL Pool across 2 tables.  We need to extract the data needed for each table, clean it, and write it back to ADLS.  The second activity in our pipeline handles all of this in a single Synapse Spark Notebook.
+![image](https://user-images.githubusercontent.com/59613090/193136520-d0bcbab6-fc6f-4896-8ab4-19798833c384.png)
 
 
 * Now that the data is prepared and cleaned we are ready to load it into our Dedicated Pool, but we need to create the tables first.  We have a script activity that will run against our Dedicated Pool to create these artifacts for us.
     
     >*Note: Make sure your Dedicated Pool is running prior to executing this pipeline.  You can see this in the SQL Pools tab under the Manage Hub.*
 
-![image](https://user-images.githubusercontent.com/59613090/193132332-12689085-0516-45ac-ab6d-ddd91ba3928d.png)
+![image](https://user-images.githubusercontent.com/59613090/193136622-d84e952a-60f2-47f9-8895-717bf9e81c6b.png)
 
 
 * We are now all setup with data ready to go and a table to load it in and we'll use a Copy Activity to perform the load.
