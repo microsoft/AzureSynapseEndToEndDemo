@@ -3,7 +3,7 @@
 ![image](https://user-images.githubusercontent.com/59613090/193136231-4a965468-3d2e-4f24-80a3-c76d0bd8a387.png)
 
 
-* We plan to eventually load this data into Dedicated SQL Pool across 2 tables.  We need to extract the data needed for each table, clean it, and write it back to ADLS.  The second activity in our pipeline handles all of this in a single Synapse Spark Notebook.
+* We plan to eventually load this data into Dedicated SQL Pool across 2 tables representing Patient Addresses and Patient Indentifiers.  We need to extract the data needed for each table, clean it, and write it back to ADLS.  The second activity in our pipeline handles all of this inside a Data Flow Activity.  This could have been done in a Spark notebook like the previous 2 activities, but this will let you compare the two methods.
 ![image](https://user-images.githubusercontent.com/59613090/193136520-d0bcbab6-fc6f-4896-8ab4-19798833c384.png)
 
 
