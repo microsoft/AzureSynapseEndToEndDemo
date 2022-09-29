@@ -26,7 +26,7 @@ Prior to running the observations pipeline (FHIR_Pipeline4Observation_Spark_OC) 
 
 Once the pipeline opens you will need to click somewhere on the canvas (open space or background) to see the pipeline level parameters.  This means that NONE of the activities should be highlighted or selected.  Now select the Parameters tab in the bottom pane to view the pipeline level parameters.
 
-![image](https://user-images.githubusercontent.com/59613090/193133729-243d71a9-6d80-4750-a9ea-e5254e6ea136.png)
+![image](https://user-images.githubusercontent.com/59613090/193143735-1d23e579-ba28-442e-94bb-e7f95c8c1be5.png)
 
 
 Change the default value for each of the following five parameters to what you chose during deployment:
@@ -40,7 +40,7 @@ Change the default value for each of the following five parameters to what you c
 * You need to hit the debug button to kick off the pipeline run.
     >*Note: Make sure your Dedicated Pool is running prior to executing this pipeline.  You can see this in the SQL Pools tab under the Manage Hub.*
 
-![image](https://user-images.githubusercontent.com/59613090/192880611-b693730c-4b2d-4145-b5af-931f6a808050.png)
+![image](https://user-images.githubusercontent.com/59613090/193143925-bcab20eb-d2d1-4b40-81fd-b464d2ad90d2.png)
 
 
 ## Congratulations on completing Exercise 02. You are now ready to move to [Exercise 03 - Patients](https://github.com/ryanjadams/AzureSynapseEndToEndDemo/blob/main/Exercise03-Patients/README.md)
