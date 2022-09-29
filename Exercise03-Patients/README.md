@@ -19,14 +19,14 @@
 
 
 # STEP 1: Parameter Setup
-Prior to running the observations pipeline (FHIR_Pipeline4Observation_Spark_OC) you will need to set the pipeline parameters to use the artifact names you chose during deployment.  Go to the integrate hub, expand the obsevation folder, and select the pipeline to open it.
+Prior to running the Patient pipeline (FHIR_Pipeline4Patient_DataFlow_OC) you will need to set the pipeline parameters to use the artifact names you chose during deployment.  Go to the integrate hub, expand the patient folder, and select the pipeline to open it.
 
-![image](https://user-images.githubusercontent.com/59613090/193133194-68a05a70-e2c7-43b9-81fa-393b2050b231.png)
+![image](https://user-images.githubusercontent.com/59613090/193138455-cbb13596-0a2c-4353-808d-92958a7772f6.png)
 
 
 Once the pipeline opens you will need to click somewhere on the canvas (open space or background) to see the pipeline level parameters.  This means that NONE of the activities should be highlighted or selected.  Now select the Parameters tab in the bottom pane to view the pipeline level parameters.
 
-![image](https://user-images.githubusercontent.com/59613090/193133729-243d71a9-6d80-4750-a9ea-e5254e6ea136.png)
+![image](https://user-images.githubusercontent.com/59613090/193138849-b8ce7543-abde-47f8-a02b-1264f5ee77fc.png)
 
 
 Change the default value for each of the following five parameters to what you chose during deployment:
@@ -40,7 +40,7 @@ Change the default value for each of the following five parameters to what you c
 * You need to hit the debug button to kick off the pipeline run.
     >*Note: Make sure your Dedicated Pool is running prior to executing this pipeline.  You can see this in the SQL Pools tab under the Manage Hub.*
 
-![image](https://user-images.githubusercontent.com/59613090/192880611-b693730c-4b2d-4145-b5af-931f6a808050.png)
+![image](https://user-images.githubusercontent.com/59613090/193139278-e47a98bc-44c3-432b-8b1a-78d516d31cdc.png)
 
 
 ## Congratulations on completing Exercise 03.
