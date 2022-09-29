@@ -1,24 +1,24 @@
 # Objective
-This pipeline takes the JSON data that is in FHIR standard format from our "raw" ADLS container and converts it to parquet.  Since Parquet is a columnar compressed file format this makes it much faster to import and work with the data.  We store the parquet output in our "processed" container in ADLS.
+* This pipeline takes the JSON data that is in FHIR standard format from our "raw" ADLS container and converts it to parquet.  Since Parquet is a columnar compressed file format this makes it much faster to import and work with the data.  We store the parquet output in our "processed" container in ADLS.
 ![image](https://user-images.githubusercontent.com/59613090/193112535-e9c68b13-95e0-4463-a572-4cdc1b8d694d.png)
 
 
-We plan to eventually load this data into Dedicated SQL Pool across 3 tables representing Diagnosis, Insurance, and Procedures.  We need to extract the data needed for each table, clean it, and write it back to ADLS.  The second activity in our pipeline handles all of this in a single Synapse Spark Notebook.
+* We plan to eventually load this data into Dedicated SQL Pool across 3 tables representing Diagnosis, Insurance, and Procedures.  We need to extract the data needed for each table, clean it, and write it back to ADLS.  The second activity in our pipeline handles all of this in a single Synapse Spark Notebook.
 ![image](https://user-images.githubusercontent.com/59613090/193112711-8c6733f5-87e7-4639-a2e3-58afb6f2b414.png)
 
 
-Now that the data is prepared and cleaned we are ready to load it into our Dedicated Pool, but we need to create the schema and tables first.  We have a script activity that will run against our Dedicated Pool to create these artifacts for us.
+* Now that the data is prepared and cleaned we are ready to load it into our Dedicated Pool, but we need to create the schema and tables first.  We have a script activity that will run against our Dedicated Pool to create these artifacts for us.
     
     >*Note: Make sure your Dedicated Pool is running prior to executing this pipeline.  You can see this in the SQL Pools tab under the Manage Hub.*
 
 ![image](https://user-images.githubusercontent.com/59613090/193114025-309980e7-7c0a-415a-912b-fa8832c109ea.png)
 
 
-We are now all setup with data ready to go and tables to load it in and we'll use a Copy Activity for each table and load them in parallel.
+* We are now all setup with data ready to go and tables to load it in and we'll use a Copy Activity for each table and load them in parallel.
 ![image](https://user-images.githubusercontent.com/59613090/193114655-add929b4-a317-49b5-8a48-014a5e15ddaa.png)
 
 
-There is one last thing in our pipeline.  We have some data engineers that will need to explore the data in the lake to understand how they can enable new work streams for the business.  They are currently skilling up in PySpark, but until then we need to give them the ability to explore the data through TSQL.  We have created a Notebook activity that creates the meta data for SQL Tables on top of the data in our data lake.  You'll be able to play around with some exploration scripts in a later activity.
+* There is one last thing in our pipeline.  We have some data engineers that will need to explore the data in the lake to understand how they can enable new work streams for the business.  They are currently skilling up in PySpark, but until then we need to give them the ability to explore the data through TSQL.  We have created a Notebook activity that creates the meta data for SQL Tables on top of the data in our data lake.  You'll be able to play around with some exploration scripts in a later activity.
 ![image](https://user-images.githubusercontent.com/59613090/193118363-04c00d81-a374-4113-9a97-e3d3f3994807.png)
 
 
@@ -41,7 +41,8 @@ Change the default value for each of the following five parameters to what you c
 * DatasetSize - This is either "1tb" or "30tb" depending on which size dataset you want to use
 
 # STEP 2: Execute Pipeline
-You need to hit the debug button to kick off the pipeline run.
+* You need to hit the debug button to kick off the pipeline run.
+    >*Note: Make sure your Dedicated Pool is running prior to executing this pipeline.  You can see this in the SQL Pools tab under the Manage Hub.*
 
 ![image](https://user-images.githubusercontent.com/59613090/192880611-b693730c-4b2d-4145-b5af-931f6a808050.png)
 
