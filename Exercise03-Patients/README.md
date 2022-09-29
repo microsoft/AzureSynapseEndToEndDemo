@@ -15,7 +15,7 @@
 
 
 * We are now all setup with data ready to go and a table to load it in and we'll use a Copy Activity to perform the load.
-![image](https://user-images.githubusercontent.com/59613090/193132405-61afde90-c500-4097-8060-58bc00f0411e.png)
+![image](https://user-images.githubusercontent.com/59613090/193144477-0a98c0d6-1f98-45b6-8e9a-42745960b837.png)
 
 
 # STEP 1: Parameter Setup
@@ -26,7 +26,7 @@ Prior to running the Patient pipeline (FHIR_Pipeline4Patient_DataFlow_OC) you wi
 
 Once the pipeline opens you will need to click somewhere on the canvas (open space or background) to see the pipeline level parameters.  This means that NONE of the activities should be highlighted or selected.  Now select the Parameters tab in the bottom pane to view the pipeline level parameters.
 
-![image](https://user-images.githubusercontent.com/59613090/193138849-b8ce7543-abde-47f8-a02b-1264f5ee77fc.png)
+![image](https://user-images.githubusercontent.com/59613090/193144874-eb863277-d90b-4f32-a208-6d8d8f2aff96.png)
 
 
 Change the default value for each of the following five parameters to what you chose during deployment:
@@ -37,10 +37,10 @@ Change the default value for each of the following five parameters to what you c
 * DatasetSize - This is either "1tb" or "30tb" depending on which size dataset you want to use
 
 # STEP 2: Execute Pipeline
-* You need to hit the debug button to kick off the pipeline run.
+* Since this pipeline has a data flow we'll kick it off a bit differently than the previous exercises.  You will want to flip the radio button for "Data Flow Debug", hit the drop down arrow next to debug, and select the last option "Use Activity Runtime".
     >*Note: Make sure your Dedicated Pool is running prior to executing this pipeline.  You can see this in the SQL Pools tab under the Manage Hub.*
 
-![image](https://user-images.githubusercontent.com/59613090/193139278-e47a98bc-44c3-432b-8b1a-78d516d31cdc.png)
+![image](https://user-images.githubusercontent.com/59613090/193149525-ada67b9c-90b6-466e-bde7-5546f33fac56.png)
 
 
 ## Congratulations on completing Exercise 03.
