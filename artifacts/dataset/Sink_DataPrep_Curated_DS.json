@@ -1,0 +1,28 @@
+{
+	"name": "Sink_DataPrep_Curated_DS",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "StorageLS",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"StorageName": {
+					"value": "@dataset().StorageName",
+					"type": "Expression"
+				}
+			}
+		},
+		"parameters": {
+			"StorageName": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileSystem": "curated"
+			}
+		}
+	}
+}
