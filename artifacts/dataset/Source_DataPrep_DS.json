@@ -11,11 +11,21 @@
 				}
 			}
 		},
+		"parameters": {
+			"DatasetSize": {
+				"type": "string",
+				"defaultValue": "@pipeline().parameters.DatasetSize"
+			}
+		},
 		"annotations": [],
 		"type": "Binary",
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
+				"folderPath": {
+					"value": "@dataset().DatasetSize",
+					"type": "Expression"
+				},
 				"container": "source"
 			}
 		}
