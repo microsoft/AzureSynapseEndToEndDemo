@@ -94,7 +94,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "Source_DataPrep_DS",
+						"referenceName": "Source_DataPrep_Curated_DS",
 						"type": "DatasetReference"
 					}
 				],
@@ -152,7 +152,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "Source_DataPrep_DS",
+						"referenceName": "Source_DataPrep_Processed_DS",
 						"type": "DatasetReference"
 					}
 				],
