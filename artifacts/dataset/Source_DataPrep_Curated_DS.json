@@ -1,5 +1,5 @@
 {
-	"name": "Source_DataPrep_Curated_DS_copy1",
+	"name": "Source_DataPrep_Curated_DS",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "Source_Dataset_LS",
