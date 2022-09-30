@@ -37,7 +37,13 @@
 				"inputs": [
 					{
 						"referenceName": "Source_DataPrep_DS",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"DatasetSize": {
+								"value": "@pipeline().parameters.DatasetSize",
+								"type": "Expression"
+							}
+						}
 					}
 				],
 				"outputs": [
@@ -47,6 +53,10 @@
 						"parameters": {
 							"StorageName": {
 								"value": "@pipeline().parameters.TargetStorageName",
+								"type": "Expression"
+							},
+							"DatasetSize": {
+								"value": "@pipeline().parameters.DatasetSize",
 								"type": "Expression"
 							}
 						}
@@ -106,6 +116,10 @@
 							"StorageName": {
 								"value": "@pipeline().parameters.TargetStorageName",
 								"type": "Expression"
+							},
+							"DatasetSize": {
+								"value": "@pipeline().parameters.DatasetSize",
+								"type": "Expression"
 							}
 						}
 					}
@@ -163,6 +177,10 @@
 						"parameters": {
 							"StorageName": {
 								"value": "@pipeline().parameters.TargetStorageName",
+								"type": "Expression"
+							},
+							"DatasetSize": {
+								"value": "@pipeline().parameters.DatasetSize",
 								"type": "Expression"
 							}
 						}
