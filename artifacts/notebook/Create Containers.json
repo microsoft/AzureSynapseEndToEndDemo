@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "5a750235-3126-4c73-87d4-57956c4ab6bc"
+				"spark.autotune.trackingId": "b9f69f43-db0a-4c1c-aa92-d7fa08f73b7c"
 			}
 		},
 		"metadata": {
@@ -74,7 +74,7 @@
 			{
 				"cell_type": "code",
 				"source": [
-					"# pip install azure-storage-file-datalake\r\n",
+					"pip install azure-storage-file-datalake\r\n",
 					"import os, uuid, sys\r\n",
 					"from azure.storage.filedatalake import DataLakeServiceClient\r\n",
 					"from azure.core._match_conditions import MatchConditions\r\n",
