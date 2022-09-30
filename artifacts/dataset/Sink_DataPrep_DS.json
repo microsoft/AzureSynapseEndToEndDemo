@@ -25,11 +25,10 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": {
-					"value": "@dataset().DatasetSize",
+				"folderPath": {
+					"value": "@concat('fhir_ndjson/', dataset().DatasetSize)",
 					"type": "Expression"
 				},
-				"folderPath": "fhir_ndjson",
 				"fileSystem": "raw"
 			}
 		}
