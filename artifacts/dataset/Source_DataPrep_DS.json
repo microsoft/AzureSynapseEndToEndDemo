@@ -11,12 +11,20 @@
 				}
 			}
 		},
+		"parameters": {
+			"DatasetSize": {
+				"type": "string"
+			}
+		},
 		"annotations": [],
 		"type": "Binary",
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "Create_Processed.txt",
+				"folderPath": {
+					"value": "@dataset().DatasetSize",
+					"type": "Expression"
+				},
 				"container": "source"
 			}
 		}
