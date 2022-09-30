@@ -37,7 +37,13 @@
 				"inputs": [
 					{
 						"referenceName": "Source_DataPrep_DS",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"DatasetSize": {
+								"value": "@pipeline().parameters.DatasetSize",
+								"type": "Expression"
+							}
+						}
 					}
 				],
 				"outputs": [
@@ -57,6 +63,10 @@
 		"parameters": {
 			"TargetStorageName": {
 				"type": "string"
+			},
+			"DatasetSize": {
+				"type": "string",
+				"defaultValue": "1tb"
 			}
 		},
 		"folder": {
