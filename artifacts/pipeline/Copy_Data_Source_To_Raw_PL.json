@@ -54,6 +54,10 @@
 							"StorageName": {
 								"value": "@pipeline().parameters.TargetStorageName",
 								"type": "Expression"
+							},
+							"DatasetSize": {
+								"value": "@pipeline().parameters.DatasetSize",
+								"type": "Expression"
 							}
 						}
 					}
