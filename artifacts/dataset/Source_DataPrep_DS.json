@@ -16,7 +16,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "Create_Curated.txt",
+				"fileName": "Create_Processed.txt",
 				"container": "source"
 			}
 		}
