@@ -21,7 +21,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileSystem": "curated"
+				"fileSystem": "processed"
 			}
 		}
 	}
