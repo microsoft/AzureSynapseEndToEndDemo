@@ -14,10 +14,6 @@
 		"parameters": {
 			"StorageName": {
 				"type": "string"
-			},
-			"DatasetSize": {
-				"type": "string",
-				"defaultValue": "@pipeline().parameters.DatasetSize"
 			}
 		},
 		"annotations": [],
@@ -25,11 +21,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"folderPath": {
-					"value": "@concat('fhir_ndjson/', dataset().DatasetSize)",
-					"type": "Expression"
-				},
-				"fileSystem": "raw"
+				"fileSystem": "curated"
 			}
 		}
 	}
