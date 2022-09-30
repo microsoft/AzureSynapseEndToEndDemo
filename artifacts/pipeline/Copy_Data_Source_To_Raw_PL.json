@@ -110,15 +110,11 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "Sink_DataPrep_DS",
+						"referenceName": "Sink_DataPrep_Curated_DS",
 						"type": "DatasetReference",
 						"parameters": {
 							"StorageName": {
 								"value": "@pipeline().parameters.TargetStorageName",
-								"type": "Expression"
-							},
-							"DatasetSize": {
-								"value": "@pipeline().parameters.DatasetSize",
 								"type": "Expression"
 							}
 						}
@@ -148,7 +144,7 @@
 					"source": {
 						"type": "BinarySource",
 						"storeSettings": {
-							"type": "AzureBlobStorageReadSettings",
+							"type": "AzureBlobFSReadSettings",
 							"recursive": true
 						},
 						"formatSettings": {
@@ -166,8 +162,14 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "Source_DataPrep_Processed_DS",
-						"type": "DatasetReference"
+						"referenceName": "Sink_DataPrep_Processed_DS",
+						"type": "DatasetReference",
+						"parameters": {
+							"StorageName": {
+								"value": "@pipeline().parameters.TargetStorageName",
+								"type": "Expression"
+							}
+						}
 					}
 				],
 				"outputs": [
