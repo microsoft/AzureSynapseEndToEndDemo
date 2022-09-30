@@ -1,0 +1,24 @@
+{
+	"name": "Source_DataPrep_Processed_DS",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Source_Dataset_LS",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"StorageWithSaSUrl": {
+					"value": "@concat('https://medicaldl.blob.core.windows.net/source?sp=rl&st=2022-09-26T19:45:24Z&se=2032-09-27T03:45:24Z&spr=https&sv=2021-06-08&sr=c&sig=7MfRCnqvmJ7E24OJnTi51pmYN9FVO28XYjpXR6LhVRo%3D')",
+					"type": "Expression"
+				}
+			}
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "Create_Processed.txt",
+				"container": "source"
+			}
+		}
+	}
+}
