@@ -43,4 +43,4 @@ Change the default value for each of the following five parameters to what you c
 ![image](https://user-images.githubusercontent.com/59613090/193143925-bcab20eb-d2d1-4b40-81fd-b464d2ad90d2.png)
 
 
-## Congratulations on completing Exercise 02. You are now ready to move to [Exercise 03 - Patients](https://github.com/ryanjadams/AzureSynapseEndToEndDemo/blob/main/Exercise03-Patients/README.md)
+## Congratulations on completing Exercise 02. You are now ready to move to [Exercise 03 - Patients](https://github.com/microsoft/AzureSynapseEndToEndDemo/blob/main/Exercise03-Patients/README.md)
