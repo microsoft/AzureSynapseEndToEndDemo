@@ -45,4 +45,4 @@ Once you have the pipeline open, you can execute it by adding a trigger and choo
 
 ![image](https://user-images.githubusercontent.com/59613090/192582378-b75f16e3-8426-41a8-9a8d-b0d9e9aacef1.png)
 
-## Congratulations on completing setup. You are now ready to move to [Exercise 01 - Claims](https://github.com/ryanjadams/AzureSynapseEndToEndDemo/blob/main/Exercise01-Claims/README.md)
+## Congratulations on completing setup. You are now ready to move to [Exercise 01 - Claims](https://github.com/microsoft/AzureSynapseEndToEndDemo/blob/main/Exercise01-Claims/README.md)
