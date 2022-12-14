@@ -32,7 +32,7 @@
       "type": "string",
       "metadata": {
         "description": "Name of the Managed Resource Group for Synapse"
-    }
+    },
     "SqlPoolName": {
       "type": "string",
       "metadata": {
