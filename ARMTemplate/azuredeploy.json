@@ -28,6 +28,11 @@
         "description": "Name of the workspace"
       }
     },
+    "ManagedResourceGroupName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the Managed Resource Group for Synapse"
+    }
     "SqlPoolName": {
       "type": "string",
       "metadata": {
@@ -77,7 +82,7 @@
     },
     "sku": {
       "type": "string",
-      "defaultValue": "DW100c",
+      "defaultValue": "DW1000c",
       "allowedValues": [
         "DW100c",
         "DW200c",
@@ -160,6 +165,7 @@
         "[variables('dlsName')]",
         "[variables('dlsFsName')]"
       ],
+      "managedResourceGroupName": "[parameters('ManagedResourceGroupName')]",
       "properties": {
         "defaultDataLakeStorage": {
           "accountUrl": "[reference(variables('dlsName')).primaryEndpoints.dfs]",
