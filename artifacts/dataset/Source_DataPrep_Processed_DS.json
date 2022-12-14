@@ -1,5 +1,5 @@
 {
-	"name": "Source_DataPrep_DS",
+	"name": "Source_DataPrep_Processed_DS",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "Source_Dataset_LS",
@@ -11,20 +11,12 @@
 				}
 			}
 		},
-		"parameters": {
-			"DatasetSize": {
-				"type": "string"
-			}
-		},
 		"annotations": [],
 		"type": "Binary",
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"folderPath": {
-					"value": "@dataset().DatasetSize",
-					"type": "Expression"
-				},
+				"fileName": "Create_Processed.txt",
 				"container": "source"
 			}
 		}

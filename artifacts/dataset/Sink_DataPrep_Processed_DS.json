@@ -1,5 +1,5 @@
 {
-	"name": "Sink_DataPrep_DS",
+	"name": "Sink_DataPrep_Processed_DS",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "StorageLS",
@@ -14,9 +14,6 @@
 		"parameters": {
 			"StorageName": {
 				"type": "string"
-			},
-			"DatasetSize": {
-				"type": "string"
 			}
 		},
 		"annotations": [],
@@ -24,11 +21,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"folderPath": {
-					"value": "@concat('fhir_ndjson/', dataset().DatasetSize)",
-					"type": "Expression"
-				},
-				"fileSystem": "raw"
+				"fileSystem": "processed"
 			}
 		}
 	}
