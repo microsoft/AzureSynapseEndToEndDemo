@@ -12,35 +12,42 @@
     },
     "StorageAcccountName": {
       "type": "string",
+      "defaultValue": "",
       "metadata": {
         "description": "Name of the StorageAccount"
       }
     },
     "StorageContainerName": {
       "type": "string",
+      "defaultValue": "",
       "metadata": {
         "description": "Name of the Container in Storage Account"
       }
     },
     "WorkspaceName": {
       "type": "string",
+      "defaultValue": "",
       "metadata": {
-        "description": "Name of the workspace"
+        "description": "Name of the Synapse Workspace"
       }
     },
     "ManagedResourceGroupName": {
       "type": "string",
+      "defaultValue": "",
       "metadata": {
         "description": "Name of the Managed Resource Group for Synapse"
+    }
     },
     "SqlPoolName": {
       "type": "string",
+      "defaultValue": "",
       "metadata": {
         "description": "Name of the dedicated sql pool"
       }
     },
     "SparkPoolName": {
       "type": "string",
+      "defaultValue": "",
       "metadata": {
         "description": "Name of the synapse spark pool"
       }
@@ -108,6 +115,7 @@
     },
     "githubUsername": {
       "type": "string",
+      "defaultValue": "",
       "metadata": {
         "description": "Username of your github account hosting synapse workspace resources"
       }
@@ -165,7 +173,6 @@
         "[variables('dlsName')]",
         "[variables('dlsFsName')]"
       ],
-      "managedResourceGroupName": "[parameters('ManagedResourceGroupName')]",
       "properties": {
         "defaultDataLakeStorage": {
           "accountUrl": "[reference(variables('dlsName')).primaryEndpoints.dfs]",
@@ -174,6 +181,7 @@
         "sqlAdministratorLogin": "[parameters('sqlAdministratorLogin')]",
         "sqlAdministratorLoginPassword": "[parameters('sqlAdministratorLoginPassword')]",
         "publicNetworkAccess": "Enabled",
+        "managedResourceGroupName": "[parameters('ManagedResourceGroupName')]",
         "workspaceRepositoryConfiguration": {
           "type": "WorkspaceGitHubConfiguration",
           "hostName": "https://github.com",
