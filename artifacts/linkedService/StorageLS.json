@@ -4,7 +4,7 @@
 		"parameters": {
 			"StorageName": {
 				"type": "string",
-				"defaultValue": "synapsee2elake"
+				"defaultValue": "tssynapsee2estorage"
 			}
 		},
 		"annotations": [],
