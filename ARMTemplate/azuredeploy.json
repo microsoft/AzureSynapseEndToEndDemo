@@ -48,6 +48,7 @@
     "SparkPoolName": {
       "type": "string",
       "defaultValue": "",
+      "maxLength": 15,
       "metadata": {
         "description": "Name of the synapse spark pool"
       }
