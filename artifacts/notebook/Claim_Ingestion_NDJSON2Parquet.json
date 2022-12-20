@@ -7,20 +7,20 @@
 		"nbformat": 4,
 		"nbformat_minor": 2,
 		"bigDataPool": {
-			"referenceName": "synapsee2espark",
+			"referenceName": "healthcare",
 			"type": "BigDataPoolReference"
 		},
 		"sessionProperties": {
-			"driverMemory": "56g",
-			"driverCores": 8,
-			"executorMemory": "56g",
-			"executorCores": 8,
-			"numExecutors": 2,
+			"driverMemory": "112g",
+			"driverCores": 16,
+			"executorMemory": "112g",
+			"executorCores": 16,
+			"numExecutors": 4,
 			"conf": {
 				"spark.dynamicAllocation.enabled": "false",
-				"spark.dynamicAllocation.minExecutors": "2",
-				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "fd086f69-8738-4c73-8e5c-991a4de08da6"
+				"spark.dynamicAllocation.minExecutors": "4",
+				"spark.dynamicAllocation.maxExecutors": "4",
+				"spark.autotune.trackingId": "c4357b4e-2833-4f00-89f0-e12e26a21fb1"
 			}
 		},
 		"metadata": {
@@ -28,25 +28,24 @@
 			"enableDebugMode": false,
 			"kernelspec": {
 				"name": "synapse_pyspark",
-				"display_name": "Synapse PySpark"
+				"display_name": "python"
 			},
 			"language_info": {
 				"name": "python"
 			},
 			"a365ComputeOptions": {
-				"id": "/subscriptions/96220437-3a69-42d5-8f09-d14dcc3392a5/resourceGroups/synapsee2e/providers/Microsoft.Synapse/workspaces/tssynapsee2/bigDataPools/synapsee2espark",
-				"name": "synapsee2espark",
+				"id": "/subscriptions/7e416de3-c506-4776-8270-83fd73c6cc37/resourceGroups/syne2e/providers/Microsoft.Synapse/workspaces/health/bigDataPools/healthcare",
+				"name": "healthcare",
 				"type": "Spark",
-				"endpoint": "https://tssynapsee2.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/synapsee2espark",
+				"endpoint": "https://health.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/healthcare",
 				"auth": {
 					"type": "AAD",
 					"authResource": "https://dev.azuresynapse.net"
 				},
 				"sparkVersion": "3.1",
-				"nodeCount": 5,
-				"cores": 8,
-				"memory": 56,
-				"automaticScaleJobs": false
+				"nodeCount": 3,
+				"cores": 16,
+				"memory": 112
 			},
 			"sessionKeepAliveTimeout": 30
 		},
@@ -59,10 +58,10 @@
 					]
 				},
 				"source": [
-					"StorageName = \"tssynapsee2estorage\"\r\n",
+					"StorageName = \"medicaldl\"\r\n",
 					"DatasetSize = \"1tb\""
 				],
-				"execution_count": 2
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",

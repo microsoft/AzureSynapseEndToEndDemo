@@ -480,7 +480,7 @@
 			},
 			"ServerName": {
 				"type": "string",
-				"defaultValue": "synapsee2e"
+				"defaultValue": "synapsee2esql"
 			},
 			"SparkPoolName": {
 				"type": "string",
