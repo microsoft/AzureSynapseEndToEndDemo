@@ -3,10 +3,10 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "sqlAdministratorLogin": {
-            "value": "GEN-UNIQUE-6"
+            "value": "sqladmin"
         },
         "sqlAdministratorLoginPassword": {
-            "value": "GEN-PASSWORD"
+            "value": "Temp12345"
         }
     }
 }
