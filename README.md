@@ -11,3 +11,4 @@ large sized Health Care sample data. You will learn how to ingest, process, and 
 * [Exercise 01 - Claims](https://github.com/microsoft/AzureSynapseEndToEndDemo/blob/main/Exercise01-Claims/README.md)
 * [Exercise 02 - Observations](https://github.com/microsoft/AzureSynapseEndToEndDemo/blob/main/Exercise02-Observations/README.md)
 * [Exercise 03 - Patients](https://github.com/microsoft/AzureSynapseEndToEndDemo/blob/main/Exercise03-Patients/README.md)
+* [Troubleshooting](https://github.com/microsoft/AzureSynapseEndToEndDemo/blob/main/Troubleshooting/README.md)
