@@ -50,4 +50,4 @@ Once you have the pipeline open, you can execute it by clicking debug.  When you
 ![image](https://user-images.githubusercontent.com/59613090/193361209-7b9ba056-d7b4-4415-baeb-6b7f012b1d47.png)
 
 
-## Congratulations on completing setup. You are now ready to move to [Exercise 01 - Claims](https://github.com/microsoft/AzureSynapseEndToEndDemo/blob/main/Exercise01-Claims/README.md)
+## Congratulations on completing setup. You are now ready to move to [Exercise 01 - Claims](/Exercise01-Claims/README.md)
