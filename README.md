@@ -11,4 +11,4 @@ large sized Health Care sample data. You will learn how to ingest, process, and 
 * [Exercise 01 - Claims](Exercise01-Claims/README.md)
 * [Exercise 02 - Observations](Exercise02-Observations/README.md)
 * [Exercise 03 - Patients](Exercise03-Patients/README.md)
-* [Troubleshooting](Troubleshooting/Readme.md)
+* [Troubleshooting](Troubleshooting/README.md)
