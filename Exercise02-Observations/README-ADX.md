@@ -75,25 +75,37 @@ Change the default value for each of the following five parameters to what you c
 
 # STEP 3: Ingesting Data
 
-1. In Synapse studio, on the left-side pane, select **Data** 
-2. Right-click ADX database (ObservationData) and click on **Open in Azure Data Explorer**. This opens the Azure Data Explorer web UI. 
-3. Once in the web UI click on the **Data** tab on the left. This opens the ADX "One-Click UI", where you can quickly ingest data, create database tables, and automatically map the table schema.  
-4. Click on **Ingest data**, and then enter the following details:
+1. In Synapse studio, on the left-side pane, select **Data**
+   
+3. Right-click ADX database (ObservationData) and click on **Open in Azure Data Explorer**. This opens the Azure Data Explorer web UI.
+   
+5. Once in the web UI click on the **Data** tab on the left. This opens the ADX "One-Click UI", where you can quickly ingest data, create database tables, and automatically map the table schema.
+   
+7. Click on **Ingest data**, and then enter the following details:
+   
    | Setting | Value | Description |
    |:------|:------|:------
-   | Cluster | adxpoolmedicaldata | Enter name of Data Explorer pool created |
+   | Cluster | adxpoolmedicaldata | Enter name of Data Explorer pool created or use the *Add connection* button to add Connection URI |
    | Database | ObservationData | Enter name of database created |
-   | New Table | ObservationsTable | Enter the name for the table that will hold the taxi trip data | 
-6. Select **Next**, and then enter the following information for **Source**:
-   - Under *Source type* choose **ADLS Gen2 Container**.
-   - Under *Ingestion Type* choose **One-time + Continuous**
-   - Under *Select source* choose **Add URL**
-   - Under *Link to Source* 
-   - Under *Upload Files -> Browse Files -> File Name* paste the following Github URL: https://github.com/Azure/Test-Drive-Azure-Synapse-with-a-1-click-POC/raw/main/tripDataAndFaresCSV/trip-data.csv
-   - Ensure the **trip-data.csv** file was properly uploaded by seeing a green checkmark under the **status** column.
-7.  Select **Next: Schema** and leave all the information as default. This page displays the schema and a partial data preview of the **taxitriptable** that will be created.
-8.  Select **Next: Start Ingestion** and this will begin the ingestion process for the data. It is complete once all the files display a green checkmark. Click **Close** to complete.
-9.  Validate ingestion by selecting **Query** on the left-side pane, clicking on the taxitripdatabase -> taxitriptable and you will see all of the data within the table. The same will be found in Synapse studio. 
+   | New Table | ObservationsTable | Enter the name for the table that will hold the taxi trip data |
+
+9. Select **Next**, and then enter the following information for **Source**:
+   
+   | Setting | Value | Description |  
+   |:------|:------|:------
+   | Source Type | ADLS Gen2 Container | Choose the correct source type  
+   | Ingestion Type | One-time + Continuous | Choose the correct ingestion type  
+   | Select source | Select Container | This allows you to select the container from your Azure Subscription  
+   | Storage subscription | (Enter your subscription name) | Enter your Azure subscription name 
+   | Storage account | storagemedicaldata | Enter your storage account name 
+   | Container | curated | Enter this container name as this where the data resides  
+   | Sample Size | NA | Leave blank |
+   | Folder path | fhir/1tb/Observation_main | Find this under Directory Properties for this folder
+   | File extension | .parquet | This is the format of the data
+            
+8.  Select **Next: Schema** and leave all the information as default. This page displays the schema and a partial data preview of the **taxitriptable** that will be created.
+9.  Select **Next: Start Ingestion** and this will begin the ingestion process for the data. It is complete once all the files display a green checkmark. Click **Close** to complete.
+10.  Validate ingestion by selecting **Query** on the left-side pane, clicking on the taxitripdatabase -> taxitriptable and you will see all of the data within the table. The same will be found in Synapse studio. 
 
 ![Ingesting Data](https://github.com/Azure/Test-Drive-Azure-Synapse-with-a-1-click-POC/raw/nataliarodri906-patch-1/images/gif3.gif)  
 
