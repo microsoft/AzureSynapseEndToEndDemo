@@ -52,9 +52,9 @@ Change the default value for each of the following five parameters to what you c
 2. Select **New**, and then enter the following details on the **Basics** tab:  
    | Setting | Value | Description |
    |:------|:------|:------
-   | Data Explorer Pool Name | adxpoolmedicaldata | This is the name the Data Explorer pool will have |
-   | Workload | Compute Optimized | This workload provides a higher CPU to SSD storage ratio. |
-   | Node Size | Small(4 cores) | Set this to the smallest size to reduce costs for this quickstart |  
+   | Data Explorer Pool Name | **adxpoolmedicaldata** | This is the name the Data Explorer pool will have |
+   | Workload | **Compute Optimized** | This workload provides a higher CPU to SSD storage ratio. |
+   | Node Size | **Small(4 cores)** | Set this to the smallest size to reduce costs for this quickstart |  
  3. Select **Review + Create > Create.** Your data explorer will start the provisioning process. Once it is complete move on to the next step.
 
 ![Creating ADX pool](https://github.com/Azure/Test-Drive-Azure-Synapse-with-a-1-click-POC/raw/nataliarodri906-patch-1/images/gif1.gif)  
@@ -65,10 +65,10 @@ Change the default value for each of the following five parameters to what you c
 2. Select + (Add new resource) > **Data Explorer Database** and paste the following information:  
    | Setting | Value | Description |
    |:------|:------|:------
-   | Data Explorer Pool Name | adxpoolmedicaldata | The name of the Data Explorer pool to use |
-   | Name | ObservationData | This database name must be unique within the cluster. |
-   | Default retention period | 365 | The time span (in days) for which it's guaranteed that the data is kept available to query. The time span is measured from the time that data is ingested. |   
-   |Default cache period | 31 | The time span (in days) for which to keep frequently queried data available in SSD storage or RAM, rather than in longer-term storage  
+   | Data Explorer Pool Name | **adxpoolmedicaldata** | The name of the Data Explorer pool to use |
+   | Name | **ObservationData** | This database name must be unique within the cluster. |
+   | Default retention period | **365** | The time span (in days) for which it's guaranteed that the data is kept available to query. The time span is measured from the time that data is ingested. |   
+   |Default cache period | **31** | The time span (in days) for which to keep frequently queried data available in SSD storage or RAM, rather than in longer-term storage  
 3. Select **Create** to create the database. Creation typically takes less than a minute.  
 
 ![Creating Data Explorer Pool](https://github.com/Azure/Test-Drive-Azure-Synapse-with-a-1-click-POC/raw/nataliarodri906-patch-1/images/gif2.gif)  
@@ -77,7 +77,7 @@ Change the default value for each of the following five parameters to what you c
 
 1. In Synapse studio, on the left-side pane, select **Data**
    
-2. Right-click ADX database (ObservationData) and click on **Open in Azure Data Explorer**. This opens the Azure Data Explorer web UI.
+2. Right-click ADX database *ObservationData* and click on **Open in Azure Data Explorer**. This opens the Azure Data Explorer web UI.
    
 3. Once in the web UI click on the **Data** tab on the left. This opens the ADX "One-Click UI", where you can quickly ingest data, create database tables, and automatically map the table schema.
    
@@ -85,33 +85,32 @@ Change the default value for each of the following five parameters to what you c
    
    | Setting | Value | Description |
    |:------|:------|:------
-   | Cluster | adxpoolmedicaldata | Enter name of Data Explorer pool created or use the *Add connection* button to add Connection URI |
-   | Database | ObservationData | Enter name of database created |
-   | New Table | ObservationsTable | Enter the name for the table that will hold the taxi trip data |
+   | Cluster | **adxpoolmedicaldata** | Enter name of Data Explorer pool created or use the *Add connection* button to add Connection URI |
+   | Database | **ObservationData** | Enter name of database created |
+   | New Table | **ObservationsTable** | Enter the name for the table that will hold the taxi trip data |
 
 5. Select **Next**, and then enter the following information for **Source**:
    
    | Setting | Value | Description |  
    |:------|:------|:------
-   | Source Type | ADLS Gen2 Container | Choose the correct source type  
-   | Ingestion Type | One-time + Continuous | Choose the correct ingestion type  
-   | Select source | Select Container | This allows you to select the container from your Azure Subscription  
-   | Storage subscription | (Enter your subscription name) | Enter your Azure subscription name 
-   | Storage account | storagemedicaldata | Enter your storage account name 
-   | Container | curated | Enter this container name as this where the data resides  
-   | Sample Size | NA | Leave blank |
-   | Folder path | fhir/1tb/Observation_main | Find this under Directory Properties for this folder
-   | File extension | .parquet | This is the format of the data
+   | Source Type | **ADLS Gen2 Container** | Choose your source type
+   | Ingestion Type | **One-time + Continuous** | Choose the type of ingestion you would like to perform (view i for more info.)
+   | Select source | **Select Container** | This allows you to select the container from your Azure Subscription  
+   | Storage subscription | *NA* | Enter your Azure subscription name 
+   | Storage account | **storagemedicaldata** | Enter your storage account name 
+   | Container | **curated** | Enter the *curated* container name as this where the data resides  
+   | Sample Size | *NA* | Leave blank 
+   | Folder path | **fhir/1tb/Observation_main** | Find this path under Directory Properties for the *Observation_main* folder
+   | File extension | **.parquet** | This is the format of the data
             
-6.  Select **Next: Schema** this page displays the schema and a partial data preview of the **ObservationsTable** that will be created.
-    * Leave the Compression Type, Data format, Nested Levels and Mapping name as displayed.
-    * Change the data type for Observation_id, encounter_id_reference, patient_id_reference from string to guid by right clicking on each of these columns.
-    * Change the data type for issued and effectiveDateTime from string to datetime.
-    * By clicking on the carot on right for the Command viewer you can view the KQL code such as the Create Table Command that is creating the table where the data will be stored (ObservationsTable)
+6.  Select **Next: Schema**, this page displays the schema and a partial data preview of the **ObservationsTable** that will be created.
+    * On the left hand menu you will see *Compression Type*, *Data format*, *Nested Levels* and *Mapping name* leave these configurations as displayed for this demo.
+    * Change the data type for **Observation_id**, **encounter_id_reference** and **patient_id_reference** columns from string to **guid** data type. Do this by right-clicking on each of these columns and clicking on the **Change Data Type** button.  
+    * Similarly, change the data type for **issued** and **effectiveDateTime** columns from string to **datetime**.
+    * Click on the carot on top right-hand corner to open the *Command viewer*. Here you can view the KQL code that is running in the background, such as the Create Table Command. This command is creating the table with all of the data types where the data will be stored: *ObservationsTable*.
     
 8.  Select **Next: Start Ingestion** and this will begin the ingestion process for the data. It is complete once all the files display a green checkmark. Click **Close** to complete.
-   
-9.  Validate ingestion by selecting **Query** on the left-side pane, clicking on the taxitripdatabase -> taxitriptable and you will see all of the data within the table. The same will be found in Synapse studio. 
+   * Note
 
 ![Ingesting Data](https://github.com/Azure/Test-Drive-Azure-Synapse-with-a-1-click-POC/raw/nataliarodri906-patch-1/images/gif3.gif)  
 
