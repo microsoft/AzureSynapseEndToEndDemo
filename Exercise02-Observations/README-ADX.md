@@ -77,11 +77,11 @@ Change the default value for each of the following five parameters to what you c
 
 1. In Synapse studio, on the left-side pane, select **Data**
    
-3. Right-click ADX database (ObservationData) and click on **Open in Azure Data Explorer**. This opens the Azure Data Explorer web UI.
+2. Right-click ADX database (ObservationData) and click on **Open in Azure Data Explorer**. This opens the Azure Data Explorer web UI.
    
-5. Once in the web UI click on the **Data** tab on the left. This opens the ADX "One-Click UI", where you can quickly ingest data, create database tables, and automatically map the table schema.
+3. Once in the web UI click on the **Data** tab on the left. This opens the ADX "One-Click UI", where you can quickly ingest data, create database tables, and automatically map the table schema.
    
-7. Click on **Ingest data**, and then enter the following details:
+4. Click on **Ingest data**, and then enter the following details:
    
    | Setting | Value | Description |
    |:------|:------|:------
@@ -89,7 +89,7 @@ Change the default value for each of the following five parameters to what you c
    | Database | ObservationData | Enter name of database created |
    | New Table | ObservationsTable | Enter the name for the table that will hold the taxi trip data |
 
-9. Select **Next**, and then enter the following information for **Source**:
+5. Select **Next**, and then enter the following information for **Source**:
    
    | Setting | Value | Description |  
    |:------|:------|:------
@@ -103,9 +103,15 @@ Change the default value for each of the following five parameters to what you c
    | Folder path | fhir/1tb/Observation_main | Find this under Directory Properties for this folder
    | File extension | .parquet | This is the format of the data
             
-8.  Select **Next: Schema** and leave all the information as default. This page displays the schema and a partial data preview of the **taxitriptable** that will be created.
-9.  Select **Next: Start Ingestion** and this will begin the ingestion process for the data. It is complete once all the files display a green checkmark. Click **Close** to complete.
-10.  Validate ingestion by selecting **Query** on the left-side pane, clicking on the taxitripdatabase -> taxitriptable and you will see all of the data within the table. The same will be found in Synapse studio. 
+6.  Select **Next: Schema** this page displays the schema and a partial data preview of the **ObservationsTable** that will be created.
+    * Leave the Compression Type, Data format, Nested Levels and Mapping name as displayed.
+    * Change the data type for Observation_id, encounter_id_reference, patient_id_reference from string to guid by right clicking on each of these columns.
+    * Change the data type for issued and effectiveDateTime from string to datetime.
+    * By clicking on the carot on right for the Command viewer you can view the KQL code such as the Create Table Command that is creating the table where the data will be stored (ObservationsTable)
+    
+8.  Select **Next: Start Ingestion** and this will begin the ingestion process for the data. It is complete once all the files display a green checkmark. Click **Close** to complete.
+   
+9.  Validate ingestion by selecting **Query** on the left-side pane, clicking on the taxitripdatabase -> taxitriptable and you will see all of the data within the table. The same will be found in Synapse studio. 
 
 ![Ingesting Data](https://github.com/Azure/Test-Drive-Azure-Synapse-with-a-1-click-POC/raw/nataliarodri906-patch-1/images/gif3.gif)  
 
