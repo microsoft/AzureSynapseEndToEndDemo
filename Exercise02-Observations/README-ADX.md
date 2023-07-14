@@ -87,7 +87,7 @@ Change the default value for each of the following five parameters to what you c
    |:------|:------|:------
    | Cluster | **adxpoolmedicaldata** | Enter name of Data Explorer pool created or use the *Add connection* button to add Connection URI |
    | Database | **ObservationData** | Enter name of database created |
-   | New Table | **ObservationsTable** | Enter the name for the table that will hold the taxi trip data |
+   | New Table | **ObservationCurated** | Enter the name for the table that will hold the taxi trip data |
 
 5. Select **Next**, and then enter the following information for **Source**:
    
@@ -103,20 +103,68 @@ Change the default value for each of the following five parameters to what you c
    | Folder path | **fhir/1tb/Observation_main** | Find this path under Directory Properties for the *Observation_main* folder
    | File extension | **.parquet** | This is the format of the data
             
-6.  Select **Next: Schema**, this page displays the schema and a partial data preview of the **ObservationsTable** that will be created.
+6.  Select **Next: Schema**, this page displays the schema and a partial data preview of the **ObservationCurated** that will be created.
     * On the left hand menu you will see *Compression Type*, *Data format*, *Nested Levels* and *Mapping name* leave these configurations as displayed for this demo.
     * Change the data type for **Observation_id**, **encounter_id_reference** and **patient_id_reference** columns from string to **guid** data type. Do this by right-clicking on each of these columns and clicking on the **Change Data Type** button.  
     * Similarly, change the data type for **issued** and **effectiveDateTime** columns from string to **datetime**.
-    * Click on the carot on top right-hand corner to open the *Command viewer*. Here you can view the KQL code that is running in the background, such as the Create Table Command. This command is creating the table with all of the data types where the data will be stored: *ObservationsTable*.
+    * Click on the carot on top right-hand corner to open the *Command viewer*. Here you can view the KQL code that is running in the background, such as the Create Table Command. This command is creating the table with all of the data types where the data will be stored: *ObservationCurated*.
     
 8.  Select **Next: Start Ingestion** and this will begin the ingestion process for the data. It is complete once all the files display a green checkmark. Click **Close** to complete.
-   * Note
+   * Note: You can also ingest the data using the pipeline named: *ObservationsData_ToSDXPool** which uses a COPY activity to bring the data into ADX. However, you must manually create a table in your ADX database prior to copying the data. Under KQL scripts you can find the *Observation Table Creation* script to create the table.  After the table has been successfully created with the correct data types for the columns you can run the piepeline with your respective parameters.
 
 ![Ingesting Data](https://github.com/Azure/Test-Drive-Azure-Synapse-with-a-1-click-POC/raw/nataliarodri906-patch-1/images/gif3.gif)  
 
 # STEP 4: Analyze Data using KQL
+1. In Synpase studio, on the left-side pane, select **Develop**. 
+2. Under 'Notebooks' dropdown on the left side of the screen, click on the KQL notebook named **'Observations Analytics w KQL'**.  
+3. Once in the notebook, ensure you are connected to your ADX pool **'adxpoolmedicaldata'** and database **'ObservationData'** and then run each of the sections (a-i) of the script separately and observe the results:
+   
+   *a.* Get a quick preview of the **'ObservationCurated'** table.  
+   
+      ![Take](images/KQLgif01.gif)
+   
+   *b.* Counts the number of Observations in the **'ObservationCurated'** table.  
+   
+      ![count](images/KQLgif02.gif)  
+
+   *c.* Summarizes the minimum and maximum of the *'issued'* column(date issued) in the **'ObservationCurated'** table.   
+   
+      ![summarize1](images/KQLgif03.gif)  
+   
+   *d.* Summarizes the count of records in the **'ObservationCurated'** table by grouping them into daily intervals based on the *'issued'* column.  
+   
+      ![summarize2](images/KQLgif04.gif)    
+      
+   *e.* Visualizes the timeseries chart for **'ObservationCurated'** table based on issued date. More specifically, it filters the table to select records with issued datetime between July 15th, 1910 and June 20th, 2021, (which are the min and max issued dates found in step c), then counts the number of observations for every 30 day intervals within that time range, and finally visualizes the results as a time chart.
+   
+      ![timechart1](images/KQLgif05.gif)  
+      
+   *f.* Now we are trimming the dataset to analyze daily observations during a relatively normal time period (8 years between 2011 and 2019). Ultimately, we visualize the timechart again and it shows the pattern of observations day by day for 8 years.  
+   
+      ![timechart2](images/KQLgif06.gif)  
+   
+   *g.* We are now identifying anomalies between these 8 years (2011 and 2019) using the timeseries chart developed in the previous step. More specifically, it uses the *"series_decompose_anomalies"* function to identify anomalies in the observations count data with a threshold of 1.5. Then, it visualizes the anomalies as an anomaly chart titled "Anomalies for daily medical observations during 8 years". Anomalies can be seen as red dots on the chart.  
+   
+     ![anomalieschart](images/KQLgif07.gif)  
+     
+   *h.* Now are listing the anomalies in a table. More specifically, 
+ it uses the *"series_decompose_anomalies"* function to identify anomalies in the observations count data and extends the table with an *'anomalies'* column. The *"mv-expand"* function is used to expand the table to separate rows for each observations count and its corresponding anomaly value and issued datetime. The code then filters the table to only include rows where the anomaly value is not equal to zero. 
+   
+      ![anomalieslist](images/KQLgif08.gif)  
+      
+   *i.* Finally, we are using this query to separate anomaly properties. More specifically, it uses the *"series_decompose_anomalies"* function to decompose the observations data into anomalies, score, and baseline values. The table is expanded to separate rows for each issued datetime, observations count, score, baseline and anomaly (where the anomalies column is set to null if the anomaly value is 0). This query will later be used to visualize the timeseries chart with anomalies on powerBI.  
+   
+      ![decomposeanomalies](images/KQLgif09.gif)  
 
 # STEP 5: Visualization
+
+# Summarization
+
+- Overall, we were able to see how Synapse Studio is an incredibly powerful tool that brings immense value to analytical workloads in Azure.  It offers a comprehensive suite of analytical components, including Pipelines, Spark, SQL, Data Explorer, and Power BI, all within a single Azure Resource. This integrated approach enhances efficiency and delivers exceptional benefits to users. 
+- More specifically, as we saw here Azure Data Explorer (ADX) is a valuable component offered by Synapse Studio. ADX proved to be a fast and highly scalable analytics service optimized for querying and analyzing large volumes of diverse data in real-time. In this case, we saw that it is particularly well-suited for working with time series data due to its efficient storage and querying capabilities. Additionally, its integration with Synapse Studio allows users to perform ad-hoc data exploration and gain instant insights from massive datasets, facilitating rapid decision-making.
+- Furthermore, Synapse Studio seamlessly integrates with Power BI, a leading business intelligence platform. This integration enables users to create interactive visualizations, dashboards, and reports based on their data. It empowers users to share compelling insights with stakeholders, enhancing collaboration and facilitating data-driven decision-making.
+- By providing these purpose-built analytical components within a single Azure Resource, Synapse Studio eliminates the complexity and overhead associated with managing multiple tools and integrations. It offers a cohesive environment for end-to-end data analytics, catering to diverse workload needs efficiently and effectively.
+
 
 
   
