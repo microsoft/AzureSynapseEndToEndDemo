@@ -1,0 +1,17 @@
+{
+	"name": "Table Row Count",
+	"properties": {
+		"content": {
+			"query": "SELECT COUNT(*)\nFROM [fhir].[ClaimDiagnosis]\n\nSELECT COUNT(*)\nFROM [fhir].[ClaimInsurance]\n\nSELECT COUNT(*)\nFROM [fhir].[ClaimProcedure]\n\nSELECT COUNT(*)\nFROM [fhir].[PatientAddress]\n\nSELECT COUNT(*)\nFROM [fhir].[PatientIdentifier]",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "synapsee2edw",
+				"poolName": "synapsee2edw"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
