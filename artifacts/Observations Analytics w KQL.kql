@@ -1,0 +1,52 @@
+// a. Quick preview of data
+ObservationCurated
+| take 100 
+
+// b. Total number of observations 
+ObservationCurated
+| count 
+
+// c. Observations min and max date
+ObservationCurated
+| summarize min(issued), max(issued)
+
+// d. Summarizes the count of observations by grouping them into daily intervals based on the issued date. 
+ObservationCurated
+| summarize count() by bin(issued, 1d)
+
+// e. Visualize timeseries chart
+ObservationCurated
+| where issued between (datetime(1910-07-15T12:49:47.219Z)..datetime(2021-06-20T11:41:23.934Z))
+| make-series observationscount=count() on issued from datetime(1910-07-15T12:49:47.219Z) to datetime(2021-06-20T11:41:23.934Z) step 30d
+| render timechart 
+
+// f. Trimming dataset to analyze daily observations during a relatively normal time period (8 years between 2011 and 2019)
+ObservationCurated
+| where issued between (datetime(2011-08-05 00:00:00.0)..datetime(2019-01-01 00:00:00.0))
+| make-series observationscount=count() on issued from datetime(2011-08-05 00:00:00.0) to datetime(2019-01-01 00:00:00.0) step 1d
+| render timechart 
+
+// g. We are now identifying anomalies between these 8 years (2011 and 2019) using the timeseries chart developed in the previous step.
+ObservationCurated
+| where issued between (datetime(2011-08-05 00:00:00.0)..datetime(2019-01-01 00:00:00.0))
+| make-series observationscount=count() on issued from datetime(2011-08-05 00:00:00.0) to datetime(2019-01-01 00:00:00.0) step 1d
+| extend anomalies = series_decompose_anomalies(observationscount, 1.5)
+| render anomalychart with(anomalycolumns=anomalies, title='Anomalies for daily medical observations during 8 years')
+
+// h. List Anomalies
+ObservationCurated
+| make-series observationscount=count() on issued from datetime(2011-08-05 00:00:00.0) to datetime(2019-01-01 00:00:00.0) step 1d
+| extend anomalies = series_decompose_anomalies(observationscount, 1.5)
+| mv-expand observationscount, anomalies, issued
+| where toint(anomalies) <> 0
+| sort by todatetime(issued)
+
+// i. Separate anomaly properties and use query to create power BI report
+ObservationCurated
+| make-series observationscount=count() on issued from datetime(2011-08-05 00:00:00.0) to datetime(2019-01-01 00:00:00.0) step 1d
+| extend (anomalies, score, baseline) = series_decompose_anomalies(observationscount, 1.5)
+| mv-expand anomalies, issued, observationscount, score, baseline 
+| project anomalies = iff(toint(anomalies) == 0, int(null),toint(anomalies)), issued, observationscount, score, baseline
+
+
+
